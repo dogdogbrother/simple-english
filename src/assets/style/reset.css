@@ -1,0 +1,64 @@
+html, body, div, span,
+h1, h2, h3, h4, h5, h6, p,
+a, big, cite, code,img, strong, i,
+dl, dt, dd, ol, ul, li, form, label,
+table, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas,footer, header, hgroup, 
+menu, nav, section, mark, audio {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+}
+aside, footer, header, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+html, body {
+  background: #fafbfc;
+}
+ol, ul, li {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: none;
+  /* color: #fff; */
+}
+body::-webkit-scrollbar { 
+  width: 0 !important
+}
+
+::-webkit-scrollbar{
+  width: 10px;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: 1em;
+  background-color: rgba(50,50,50,.3);
+}
+::-webkit-scrollbar-track{
+  border-radius: 1em;
+  background-color: rgba(50,50,50,.1);
+}
+
+body { 
+  scrollbar-width: none;
+}
+
+.tox-tinymce {
+  border: none !important;
+}
