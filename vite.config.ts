@@ -30,4 +30,13 @@ export default defineConfig({
       { find: /^@\//, replacement: `${path.resolve(__dirname, "./src")}/` },
     ],
   },
+  server: {
+    proxy: {
+      "/api/": {
+        target: "暂时没有",
+        ws: true,
+        changeOrigin: true,
+      },
+    },
+  },
 })
