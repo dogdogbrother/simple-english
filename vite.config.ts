@@ -12,17 +12,22 @@ export default defineConfig({
     vueJsx(),
     Components({
       resolvers: [
-        AntDesignVueResolver(),
+        AntDesignVueResolver({
+          importStyle: "less",
+        }),
       ],
     }),
   ],
   css: {
     preprocessorOptions: {
       less: {
+        javascriptEnabled: true,
         modifyVars: {
-          "@primary-color": "#0083FF",
+          "@primary-color": "#285CBE",
+          "@border-radius-base": "5px",
+          "@error-color": "#DD4964"
         },
-      },
+      }
     },
   },
   resolve: {
@@ -40,3 +45,25 @@ export default defineConfig({
     },
   },
 })
+
+
+// import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
+
+// export default defineConfig({
+//   plugins: [
+//     Components({
+//       resolvers: [
+//         AntDesignVueResolver({
+//           importStyle: "less",
+//         }),
+//       ],
+//     }),
+//   ],
+//   css: {
+//     preprocessorOptions: {
+//       less: {
+//         javascriptEnabled: true,
+//       },
+//     },
+//   },
+// });
