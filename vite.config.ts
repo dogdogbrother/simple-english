@@ -37,11 +37,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api/": {
-        target: "暂时没有",
-        ws: true,
+      "/api": {
+        target: 'http://127.0.0.1:3009',
         changeOrigin: true,
-      },
+        rewrite: path => path.replace(/^\/api/, '')
+      }
     },
   },
 })

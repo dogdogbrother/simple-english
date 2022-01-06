@@ -3,7 +3,7 @@
     <h3>{{actionType === 0 ? "登 录" : "注 册"}}</h3>
     <Form 
       :model="loginForm" 
-      @finish="onFinish" 
+      @finish="onLoginFinish" 
       autocomplete="off"
       v-if="actionType === 0"
     >
@@ -26,7 +26,7 @@
     </Form>
     <Form 
       :model="registerForm" 
-      @finish="onFinish" 
+      @finish="onRegisterFinish" 
       autocomplete="off"
       v-else
     >
@@ -43,10 +43,10 @@
         <Input placeholder="密码" v-model:value="registerForm.password"/>
       </Form.Item>
       <Form.Item
-        name="password"
+        name="affirmPassword"
         :rules="[{ required: true, message: '请确认密码' }]"
       >
-        <Input placeholder="确认密码" v-model:value="registerForm.confirmPassword"/>
+        <Input placeholder="确认密码" v-model:value="registerForm.affirmPassword"/>
       </Form.Item>
       <div class="register-btn">
         <Button type="link" size="small" @click="changeActionType(0)">登 录</Button>
@@ -59,6 +59,11 @@
 <script setup lang="ts">
 import { Form, Input, Button } from 'ant-design-vue'
 import { reactive, ref } from 'vue'
+import { register, login } from  '@/api/user'
+import { message } from 'ant-design-vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const actionType = ref(0)  // 0是登录, 1是注册
 const loading = ref(false)
@@ -69,16 +74,35 @@ const loginForm = reactive({
 const registerForm = reactive({
   username: "",
   password: "",
-  confirmPassword: ""
+  affirmPassword: ""
 })
-function onFinish(values: any) {
-  console.log(values)
+function onLoginFinish(values: any) {
+  loading.value = true
+  login(values).then(res => {
+    const { token, _username } = res as any
+    localStorage.setItem("token", token)
+    router.push("/notebook")
+  }).catch(error => {
+    loading.value = false
+    message.error(error.msg)
+  })
+}
+function onRegisterFinish(values: any) {
+  loading.value = true
+  register(values).then(res => {
+    message.success("注册成功")
+    localStorage.setItem("token", res + "")
+    router.push("/notebook")
+  }).catch(error => {
+    loading.value = false
+    message.error(error.msg)
+  })
 }
 function changeActionType(type: number) {
   actionType.value = type
   if(type === 0) {
     loginForm.username = loginForm.password = ""
-  } else registerForm.username = registerForm.password = registerForm.confirmPassword = ""
+  } else registerForm.username = registerForm.password = registerForm.affirmPassword = ""
 }
 </script>
 
