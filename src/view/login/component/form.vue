@@ -62,7 +62,9 @@ import { reactive, ref } from 'vue'
 import { register, login } from  '@/api/user'
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store/index'
 
+const useStore = useUserStore()
 const router = useRouter()
 
 const actionType = ref(0)  // 0是登录, 1是注册
@@ -86,18 +88,26 @@ function onLoginFinish(values: any) {
     loading.value = false
     message.error(error.msg)
   })
+  onsubmit(1, values)
 }
 function onRegisterFinish(values: any) {
+  onsubmit(2, values)
+}
+
+function onsubmit(type: number, values: any) {
+  const fn = type === 1? login : register
   loading.value = true
-  register(values).then(res => {
-    message.success("注册成功")
-    localStorage.setItem("token", res + "")
+  fn(values).then(res => {
+    const { token, username } = res as any
+    localStorage.setItem("token", token)
+    useStore.setUserInfo(username)
     router.push("/notebook")
   }).catch(error => {
     loading.value = false
     message.error(error.msg)
   })
 }
+
 function changeActionType(type: number) {
   actionType.value = type
   if(type === 0) {

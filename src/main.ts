@@ -3,6 +3,7 @@ import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from './view/login/index.vue'
 import Notebook from './view/notebook/index.vue'
+import { createPinia } from 'pinia'
 
 import './assets/style/reset.css'
 import './assets/style/attribute.css'
@@ -19,7 +20,8 @@ const router = createRouter({
 })
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.use(router)
-
+app.use(pinia)
 app.mount('#app')
