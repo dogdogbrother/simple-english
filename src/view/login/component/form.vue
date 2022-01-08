@@ -62,9 +62,7 @@ import { reactive, ref } from 'vue'
 import { register, login } from  '@/api/user'
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/store/index'
 
-const useStore = useUserStore()
 const router = useRouter()
 
 const actionType = ref(0)  // 0是登录, 1是注册
@@ -79,15 +77,6 @@ const registerForm = reactive({
   affirmPassword: ""
 })
 function onLoginFinish(values: any) {
-  loading.value = true
-  login(values).then(res => {
-    const { token, _username } = res as any
-    localStorage.setItem("token", token)
-    router.push("/notebook")
-  }).catch(error => {
-    loading.value = false
-    message.error(error.msg)
-  })
   onsubmit(1, values)
 }
 function onRegisterFinish(values: any) {
@@ -100,8 +89,7 @@ function onsubmit(type: number, values: any) {
   fn(values).then(res => {
     const { token, username } = res as any
     localStorage.setItem("token", token)
-    useStore.setUserInfo(username)
-    router.push("/notebook")
+    router.push("/note")
   }).catch(error => {
     loading.value = false
     message.error(error.msg)

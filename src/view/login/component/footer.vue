@@ -18,29 +18,58 @@ import { QqOutlined, WechatOutlined, GithubOutlined } from '@ant-design/icons-vu
 </script>
 
 <style lang="scss" scoped>
-.footer {
-  height: 30px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 16px;
-  ul {
+@media screen and (min-width:1000px) {
+  .footer {
+    height: 30px;
     display: flex;
-    line-height: 30px;
-    color: #fff;
-    li {
-      margin-right: 40px;
-      cursor: pointer;
+    justify-content: space-between;
+    font-size: 16px;
+    ul {
+      display: flex;
+      line-height: 30px;
+      color: #fff;
+      li {
+        margin-right: 40px;
+        cursor: pointer;
+      }
+      li:hover{
+        text-decoration: underline;
+      }
     }
-    li:hover{
-      text-decoration: underline;
-    }
-  }
-  .icons {
-    color: #EB642C;
-    > * {
-      margin-left: 20px;
-      cursor: pointer;
+    .icons {
+      color: #EB642C;
+      > * {
+        margin-left: 20px;
+        cursor: pointer;
+      }
     }
   }
 }
+
+@media screen and (max-width:1000px) {
+  .footer {
+    font-size: 14px;
+    ul {
+      display: flex;
+      line-height: 20px;
+      color: #fff;
+      margin-bottom: 5px;
+      li {
+        margin-right: 15px;
+        cursor: pointer;
+      }
+      li:hover{
+        text-decoration: underline;
+      }
+    }
+    .icons {
+      color: #EB642C;
+      > * {
+        margin-right: 15px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 </style>

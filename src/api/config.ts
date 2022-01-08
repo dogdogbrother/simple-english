@@ -1,15 +1,16 @@
 import axios from 'axios'
-// import { message } from 'ant-design-vue';
+import router from '@/routes'
 
 const http = axios.create({
   baseURL: "/api"
 })
 
 http.interceptors.request.use(
-  config => {
-    // token 携带
-    // const token = localStorage.getItem('token')
-    // if (token) config.headers.Authorization = token
+  (config: any) => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    } 
     return config
   }
 )
@@ -20,6 +21,9 @@ http.interceptors.response.use(
   },
   err => {
     const { data:msg = "网络错误", status = 500 } = err.response || {}
+    if (status === 401) {
+      router.push('/login')
+    }
     return Promise.reject({
       status,
       msg

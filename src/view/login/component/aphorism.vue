@@ -13,31 +13,60 @@
 </template>
 
 <style lang="scss" scoped>
-.aphorism {
-  h4 {
-    color: #EB642C;
-    line-height: 2;
-    font-size: 36px;
-  }
-  .phrase {
-    color: #fff;
-    margin-bottom: 20px;
-    line-height: 1.2;
-    font-size: 34px;
-  }
-  .zh-phrase {
-    color: #fff;
-    font-size: 28px;
-    display: flex;
-    align-items: flex-end;
-    div {
-      font-size: 16px;
-      margin-left: 20px;
-      .person {
-        color: #EB642C;
-        font-weight: bold;
+@media screen and (min-width:1000px) {
+  .aphorism {
+    h4 {
+      color: #EB642C;
+      line-height: 2;
+      font-size: 36px;
+    }
+    .phrase {
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.2;
+      font-size: 34px;
+    }
+    .zh-phrase {
+      color: #fff;
+      font-size: 28px;
+      display: flex;
+      align-items: flex-end;
+      div {
+        font-size: 16px;
+        margin-left: 20px;
+        .person {
+          color: #EB642C;
+          font-weight: bold;
+        }
       }
     }
   }
 }
+@media screen and (max-width:1000px) {
+  .aphorism {
+    h4 {
+      color: #EB642C;
+      line-height: 1.4;
+      font-size: 22px;
+    }
+    .phrase {
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.2;
+      font-size: 22px;
+    }
+    .zh-phrase {
+      color: #fff;
+      font-size: 20px;
+      div {
+        font-size: 14px;
+        .person {
+          color: #EB642C;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
 </style>
