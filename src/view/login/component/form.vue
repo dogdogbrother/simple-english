@@ -87,7 +87,7 @@ function onsubmit(type: number, values: any) {
   const fn = type === 1? login : register
   loading.value = true
   fn(values).then(res => {
-    const { token, username } = res as any
+    const { token } = res as any
     localStorage.setItem("token", token)
     router.push("/note")
   }).catch(error => {

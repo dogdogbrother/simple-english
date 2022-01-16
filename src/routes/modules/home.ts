@@ -13,7 +13,20 @@ export default [
       {
         path: 'create-note',
         component: () => import('@/view/createNote/index.vue')
-      }
+      },
+      {
+        path: 'word/:noteId',
+        component: () => import('@/view/word/index.vue')
+      },
+      {
+        path: 'addWord/:noteId',
+        component: () => import('@/view/addWord/index.vue')
+      },
+      {
+        path: 'square',
+        component: () => import('@/view/square/index.vue')
+      },
+      
     ]
   }
 ]

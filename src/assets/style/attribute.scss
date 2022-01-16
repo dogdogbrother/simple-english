@@ -1,0 +1,48 @@
+[fs-12] {
+  font-size: 12px;
+}
+[fs-16] {
+  font-size: 16px;
+}
+[fs-20] {
+  font-size: 20px;
+}
+[fs-24] {
+  font-size: 24px;
+}
+[fs-28] {
+  font-size: 28px;
+}
+[fs-32] {
+  font-size: 32px;
+}
+[fs-34] {
+  font-size: 34px;
+}
+
+[fw-b] {
+  font-weight: bold;
+}
+
+[pointer] {
+  cursor: pointer;
+}
+
+[ellipsis] {
+  text-overflow:ellipsis;
+  overflow: hidden;
+  white-space:nowrap;
+}
+
+[flex-b] {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+[flex-s] {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+

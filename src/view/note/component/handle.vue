@@ -15,7 +15,6 @@
   </section>
 </template>
 
-
 <script setup lang="ts">
 import { Input, Form, Button } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
@@ -33,6 +32,6 @@ function toCreate() {
 
 <style lang="scss" scoped>
 section {
-  
+  margin-bottom: 20px;
 }
 </style>

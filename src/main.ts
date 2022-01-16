@@ -3,7 +3,7 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './routes'
 import './assets/style/reset.css'
-import './assets/style/attribute.css'
+import './assets/style/attribute.scss'
 import 'ant-design-vue/dist/antd.less'
 
 
