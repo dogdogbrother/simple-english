@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import Handle from './component/handle.vue'
 import { getNoteList } from '@/api/note'
-import NoteList from './component/noteList.vue'
+import NoteList from '@/components/noteList/index.vue'
 import { ref } from 'vue'
 
 const noteList = ref([])

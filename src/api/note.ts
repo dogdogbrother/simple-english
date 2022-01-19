@@ -1,10 +1,11 @@
 import http from './config'
 
 // 获取单词本列表
-export function getNoteList() {
+export function getNoteList(params?: any) {
   return http({
     url: '/note',
     method: 'get',
+    params
   })
 }
 

@@ -2,7 +2,7 @@
   <ul>
     <li 
       pointer
-      v-for="note: any in props.noteList" 
+      v-for="note in props.noteList" 
       @click="toWord(note.id)"
       :style="getCover(note.noteCover)"
     >
@@ -12,7 +12,7 @@
         <p class="word-count">单词数量: {{note.wordCount}}个</p>
         <div clang="footer" flex-b>
           <span class="btn" @click.stop="toAddWord(note.id)">添加单词</span>
-          <div class="user-info" flex-b>
+          <div class="user-info" flex-b  @click.stop="toUser(note.user.id)">
             <Avatar :src="getUserAvatar(note.user.avatar)" size="small"/>
             <span ellipsis>{{note.user.nickname}}</span>
           </div>
@@ -26,20 +26,23 @@
 import { Avatar } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { getNoteCover, getUserAvatar } from '@/utils'
+import { noteType } from '@/type/note'
+
 const router = useRouter()
 
-const props = defineProps({
-  noteList: Array
-})
+const props = defineProps<{
+  noteList: noteType[]
+}>()
 
-function toWord(noteId: number) {
+function toWord(noteId: string | number) {
   router.push(`/word/${noteId}`)
 }
-
-function toAddWord(noteId: number) {
+function toAddWord(noteId: string | number) {
   router.push(`/addWord/${noteId}`)
 }
-
+function toUser(userId: string | number) {
+  router.push(`/user/${userId}`)
+}
 function getCover(noteCover: string) {
   return `background-image: url(${getNoteCover(noteCover)});`
 }

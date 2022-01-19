@@ -1,6 +1,6 @@
 <template>
   <div class="user-card" flex-s>
-    <Avatar pointer size="large" :src="getUserAvatar(userInfo.avatar)" m-b-20 />
+    <Avatar size="large" :src="getUserAvatar(userInfo.avatar)" m-r-20 />
     <div flex-1 class="user-info">
       <h3>{{userInfo.nickname}}</h3>
       <p class="introduce">{{userInfo.introduce || "暂无简介"}}</p>
@@ -11,14 +11,7 @@
       type="primary"
     >编辑资料</Button>
   </div>
-  <Tabs>
-    <Tabs.TabPane key="1" tab="动态">
-      <div>3</div>
-    </Tabs.TabPane>
-    <Tabs.TabPane key="2" tab="单词本">
-      <div>2</div>
-    </Tabs.TabPane>
-  </Tabs>
+  
 </template>
 
 <script setup lang="ts">

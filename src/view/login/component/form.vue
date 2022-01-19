@@ -70,28 +70,29 @@ import { Form, Input, Button, message, InputPassword } from 'ant-design-vue'
 import { reactive, ref } from 'vue'
 import { register, login } from  '@/api/user'
 import { useRouter } from 'vue-router'
+import { loginType, registerType } from '@/type/user'
 
 const router = useRouter()
 
 const actionType = ref(0)  // 0是登录, 1是注册
 const loading = ref(false)
-const loginForm = reactive({
+const loginForm = reactive<loginType>({
   username: "",
   password: ""
 })
-const registerForm = reactive({
+const registerForm = reactive<registerType>({
   username: "",
   password: "",
   affirmPassword: ""
 })
-function onLoginFinish(values: any) {
+function onLoginFinish(values: loginType) {
   onsubmit(1, values)
 }
-function onRegisterFinish(values: any) {
+function onRegisterFinish(values: registerType) {
   onsubmit(2, values)
 }
 
-function onsubmit(type: number, values: any) {
+function onsubmit(type: number, values: loginType | registerType) {
   const fn = type === 1? login : register
   loading.value = true
   fn(values).then(res => {

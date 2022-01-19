@@ -1,8 +1,14 @@
 <template>
   <div class="user-show" flex-s>
-    <Avatar pointer size="large" :src="getUserAvatar(props.user.avatar)" m-b-20 />
+    <Avatar 
+      pointer 
+      size="large" 
+      :src="getUserAvatar(props.user.avatar)" 
+      m-r-20
+      @click="toUser"
+    />
     <div flex-1 class="user-info">
-      <h3>{{props.user.nickname}}</h3>
+      <h3 pointer @click="toUser">{{props.user.nickname}}</h3>
       <p class="introduce">{{props.user.introduce || "暂无简介"}}</p>
     </div>
   </div>
@@ -11,20 +17,25 @@
 <script setup lang="ts">
 import { Avatar } from 'ant-design-vue'
 import { getUserAvatar } from '@/utils'
-const props: any = defineProps({
-  user: Object,
-})
+import { userInfoType } from '@/type/user'
 
+const props = defineProps<{
+  user: userInfoType
+}>()
+
+function toUser() {
+  window.open(`/user/${props.user.id}`)
+}
 </script>
 
 <style lang="scss" scoped>
 .user-show {
   background-color: #fff;
-  padding: 20px;
 }
 .user-info {
   h3 {
     font-size: 16px;
+    display: inline-block;
   }
   .introduce {
     font-size: 12px;
