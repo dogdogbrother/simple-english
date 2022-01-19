@@ -1,16 +1,23 @@
 import { defineStore } from 'pinia'
+import { userInfo } from '@/api/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    username: '',
-    avatar: '',
+    userInfo: {
+      username: '',
+      avatar: '',
+      id: '',
+      introduce: '',  // 个人简介
+    }
   }),
-  getters: {},
+  getters: {
+    getUserInfo(state) {
+      return state.userInfo
+    }
+  },
   actions: {
-    setUserInfo(data: any) {
-      const { username, avatar } = data
-      this.username = username
-      this.avatar = avatar
+    async setUserInfo() {
+      this.userInfo = await userInfo() as any
     }
   }
 })

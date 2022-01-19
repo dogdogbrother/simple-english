@@ -9,11 +9,11 @@
           <span @click="toPage('/square')">动态广场</span>
         </nav>
         <Dropdown>
-          <Avatar pointer :src="getUserAvatar(useStore.avatar)">{{useStore.username}}</Avatar>
+          <Avatar pointer :src="getUserAvatar(useStore.userInfo.avatar)">{{useStore.userInfo.username}}</Avatar>
           <template #overlay>
             <Menu slot="overlay">
-              <Menu.Item disabled>
-                <span>个人信息</span>
+              <Menu.Item>
+                <span @click="toUser">我的主页</span>
               </Menu.Item>
               <Menu.Item disabled>
                 <span>我的单词本</span>
@@ -35,34 +35,34 @@
 
 <script setup lang="ts">
 import { Avatar, Dropdown, Menu } from 'ant-design-vue'
-import { userInfo } from '@/api/user'
 import { useUserStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { getUserAvatar } from '@/utils'
 
 const router = useRouter()
 const useStore = useUserStore()
-userInfo().then((res: any) => {
-  useStore.setUserInfo(res)
-})
+
+useStore.setUserInfo()
 
 function logout() {
   localStorage.removeItem('token')
   router.push('/login')
 }
 
-function getAvatar(avatar: string) {
-  return `http://localhost:3009/avatar/${avatar}.jpeg`
-}
-
 function toPage(path: string) {
   router.push(path)
 }
+
+function toUser() {
+  router.push(`/user/${useStore.userInfo.id}`)
+}
+
 </script>
 
 <style lang="scss" scoped>
 header {
   height: 60px;
+  background-color: #fff;
   border-bottom: 1px rgba($color: #999, $alpha: 0.2) solid;
   box-shadow: 0 7px 10px -10px rgba($color: #999, $alpha: 0.2);
   transition: .5s;

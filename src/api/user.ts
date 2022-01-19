@@ -25,3 +25,11 @@ export function userInfo() {
     method: 'get'
   })
 }
+
+// 某个用户信息
+export function oneUserInfo(userId: string) {
+  return http({
+    url: `/user/info/${userId}`,
+    method: 'get'
+  })
+}

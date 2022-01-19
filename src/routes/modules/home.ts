@@ -26,7 +26,10 @@ export default [
         path: 'square',
         component: () => import('@/view/square/index.vue')
       },
-      
+      {
+        path: 'user/:userId',
+        component: () => import('@/view/user/index.vue')
+      },
     ]
   }
 ]

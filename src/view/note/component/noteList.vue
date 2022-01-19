@@ -14,7 +14,7 @@
           <span class="btn" @click.stop="toAddWord(note.id)">添加单词</span>
           <div class="user-info" flex-b>
             <Avatar :src="getUserAvatar(note.user.avatar)" size="small"/>
-            <span>{{note.user.nickname}}</span>
+            <span ellipsis>{{note.user.nickname}}</span>
           </div>
         </div>
       </div>
@@ -97,8 +97,14 @@ ul {
   background: rgba($color: #000, $alpha: .2)
 }
 .user-info {
-  width: 50px;
+  min-width: 50px;
+  max-width: 92px;
+  &:hover span{
+    text-decoration: underline;
+  }
   span {
+    margin-left: 5px;
+    font-size: 12px;
     color: rgba($color: #fff, $alpha: 0.9);
   }
 }

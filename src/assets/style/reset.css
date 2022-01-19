@@ -4,7 +4,7 @@ a, big, cite, code,img, strong, i,
 dl, dt, dd, ol, ul, li, form, label,
 table, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas,footer, header, hgroup, 
-menu, nav, section, mark, audio {
+menu, nav, section, mark, audio, main {
   margin: 0;
   padding: 0;
   border: 0;
@@ -19,7 +19,7 @@ body {
   line-height: 1;
 }
 html, body {
-  background: #fafbfc;
+  background: #fafbfc !important;
 }
 ol, ul, li {
   list-style: none;
@@ -49,11 +49,11 @@ body::-webkit-scrollbar {
 }
 ::-webkit-scrollbar-thumb{
   border-radius: 1em;
-  background-color: rgba(50,50,50,.3);
+  background-color: rgba(50, 50, 50, .3);
 }
 ::-webkit-scrollbar-track{
   border-radius: 1em;
-  background-color: rgba(50,50,50,.1);
+  background-color: rgba(50, 50, 50, .1);
 }
 
 body { 

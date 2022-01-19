@@ -17,7 +17,7 @@
         name="password"
         :rules="[{ required: true, message: '请输入密码' }]"
       >
-        <Input placeholder="密码" v-model:value="loginForm.password"/>
+        <InputPassword placeholder="密码" v-model:value="loginForm.password"/>
       </Form.Item>
       <div class="register-btn">
         <Button type="link" size="small" @click="changeActionType(1)">注 册</Button>
@@ -32,21 +32,30 @@
     >
       <Form.Item
         name="username"
-        :rules="[{ required: true, message: '请输入用户名' }]"
+        :rules="[
+          { required: true, message: '请输入用户名' },
+          { min: 3, max: 9, message: '请输入3~9字符的用户名' }
+        ]"
       >
-        <Input placeholder="账号" v-model:value="registerForm.username"/>
+        <Input autocomplete="off" placeholder="账号" v-model:value="registerForm.username"/>
       </Form.Item>
       <Form.Item
         name="password"
-        :rules="[{ required: true, message: '请输入密码' }]"
+        :rules="[
+          { required: true, message: '请输入密码' },
+          { min: 6, max: 12, message: '为了安全,密码请设置6~12位'}
+        ]"
       >
-        <Input placeholder="密码" v-model:value="registerForm.password"/>
+        <InputPassword placeholder="密码" v-model:value="registerForm.password" />
       </Form.Item>
       <Form.Item
         name="affirmPassword"
-        :rules="[{ required: true, message: '请确认密码' }]"
+        :rules="[
+          { required: true, message: '请确认密码' },
+          { min: 6, max: 12, message: '为了安全,密码请设置6~12位'}
+        ]"
       >
-        <Input placeholder="确认密码" v-model:value="registerForm.affirmPassword"/>
+        <InputPassword placeholder="确认密码" v-model:value="registerForm.affirmPassword" />
       </Form.Item>
       <div class="register-btn">
         <Button type="link" size="small" @click="changeActionType(0)">登 录</Button>
@@ -57,10 +66,9 @@
 </template>
 
 <script setup lang="ts">
-import { Form, Input, Button } from 'ant-design-vue'
+import { Form, Input, Button, message, InputPassword } from 'ant-design-vue'
 import { reactive, ref } from 'vue'
 import { register, login } from  '@/api/user'
-import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
