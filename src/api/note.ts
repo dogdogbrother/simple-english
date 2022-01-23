@@ -17,3 +17,19 @@ export function addNote(data: any) {
     data
   })
 }
+
+// 选择单词本
+export function useNote(noteId: any) {
+  return http({
+    url: `/note/useNote/${noteId}`,
+    method: 'put',
+  })
+}
+
+// 获取当前用户使用的单词本
+export function getUseNote() {
+  return http({
+    url: `/note/useNote`,
+    method: 'get',
+  })
+}

@@ -1,5 +1,7 @@
 <template>
-  <DynamicList :dynamicList="squareList" />
+  <div class="square-wrap">
+    <DynamicList :dynamicList="squareList" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -17,4 +19,9 @@ getSquareList().then((res: any) => {
 </script>
 
 <style lang="scss" scoped>
+.square-wrap {
+  width: 100%;
+  max-width: 660px;
+  margin: 0 auto;
+}
 </style>

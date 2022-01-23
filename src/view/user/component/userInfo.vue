@@ -1,6 +1,6 @@
 <template>
   <div class="user-card" flex-s>
-    <Avatar size="large" :src="getUserAvatar(userInfo.avatar)" m-r-20 />
+    <Avatar size="large" :src="userInfo.avatar" m-r-20 />
     <div flex-1 class="user-info">
       <h3>{{userInfo.nickname}}</h3>
       <p class="introduce">{{userInfo.introduce || "暂无简介"}}</p>
@@ -18,7 +18,6 @@
 import { oneUserInfo } from '@/api/user'
 import { ref } from 'vue'
 import { Avatar, Button, Tabs } from 'ant-design-vue'
-import { getUserAvatar } from '@/utils'
 
 const props = defineProps({
   userId: String,

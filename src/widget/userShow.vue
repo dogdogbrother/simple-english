@@ -3,7 +3,7 @@
     <Avatar 
       pointer 
       size="large" 
-      :src="getUserAvatar(props.user.avatar)" 
+      :src="props.user.avatar" 
       m-r-20
       @click="toUser"
     />
@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { Avatar } from 'ant-design-vue'
-import { getUserAvatar } from '@/utils'
 import { userInfoType } from '@/type/user'
 
 const props = defineProps<{

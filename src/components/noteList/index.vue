@@ -11,9 +11,15 @@
         <p class="summary" ellipsis>单词本描述: {{note.noteSummary}}</p>
         <p class="word-count">单词数量: {{note.wordCount}}个</p>
         <div clang="footer" flex-b>
-          <span class="btn" @click.stop="toAddWord(note.id)">添加单词</span>
+          <span 
+            v-if="userStore.userInfo.id == note.userId"
+            class="btn" 
+            @click.stop="toAddWord(note.id)"
+          >添加单词</span>
+          <!-- 单纯写个空标签 为了 flex 布局 -->
+          <i v-else></i>
           <div class="user-info" flex-b  @click.stop="toUser(note.user.id)">
-            <Avatar :src="getUserAvatar(note.user.avatar)" size="small"/>
+            <Avatar :src="note.user.avatar" size="small"/>
             <span ellipsis>{{note.user.nickname}}</span>
           </div>
         </div>
@@ -25,10 +31,12 @@
 <script setup lang="ts">
 import { Avatar } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
-import { getNoteCover, getUserAvatar } from '@/utils'
 import { noteType } from '@/type/note'
+import { useUserStore } from '@/store'
 
 const router = useRouter()
+
+const userStore = useUserStore()
 
 const props = defineProps<{
   noteList: noteType[]
@@ -41,10 +49,10 @@ function toAddWord(noteId: string | number) {
   router.push(`/addWord/${noteId}`)
 }
 function toUser(userId: string | number) {
-  router.push(`/user/${userId}`)
+  window.open(`/user/${userId}`)
 }
 function getCover(noteCover: string) {
-  return `background-image: url(${getNoteCover(noteCover)});`
+  return `background-image: url(${noteCover});`
 }
 
 </script>

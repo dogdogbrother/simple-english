@@ -7,6 +7,7 @@
       type="primary"
       @click="hideAllWord"
     >{{hideMeaning ? '显示' : '隐藏'}}中译</Button>
+    <Button type="primary" @click="selecNote">切换到此单词本</Button>
   </div>
   <ul class="word-box">
     <li v-for="word in wordList" :key="word.id">
@@ -19,6 +20,7 @@
 
 <script setup lang="ts">
 import { getNoteWord } from '@/api/word'
+import { useNote } from '@/api/note'
 import { useRoute } from 'vue-router'
 import { Button } from 'ant-design-vue'
 import { ref } from 'vue'
@@ -47,6 +49,13 @@ function showWord(wordId: any) {
   if(hideWords.value.length === 0) {
     hideMeaning.value = false
   }
+}
+
+// 切换单词本
+function selecNote() {
+  useNote(noteId).then(res => {
+    console.log(res);
+  })
 }
 
 </script>

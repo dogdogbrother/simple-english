@@ -9,7 +9,7 @@
           <span @click="toPage('/square')">动态广场</span>
         </nav>
         <Dropdown>
-          <Avatar pointer :src="getUserAvatar(useStore.userInfo.avatar)">{{useStore.userInfo.username}}</Avatar>
+          <Avatar pointer :src="useStore.userInfo.avatar">{{useStore.userInfo.username}}</Avatar>
           <template #overlay>
             <Menu slot="overlay">
               <Menu.Item>
@@ -37,7 +37,6 @@
 import { Avatar, Dropdown, Menu } from 'ant-design-vue'
 import { useUserStore } from '@/store'
 import { useRouter } from 'vue-router'
-import { getUserAvatar } from '@/utils'
 
 const router = useRouter()
 const useStore = useUserStore()
