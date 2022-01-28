@@ -13,7 +13,7 @@ export function addWord(data: any) {
 export function getNoteWord(noteId: number | string) {
   return http({
     url: `/word/list/${noteId}`,
-    method: 'get'
+    method: 'get',
   })
 }
 
@@ -30,6 +30,19 @@ export function getYoudao(data: any) {
   return http({
     url: `/word/youdao`,
     method: 'post',
+    data
+  })
+}
+
+export type wordPlanActionType = 0 | 1 | 2 | 3
+interface wordPlanParamsType {
+  keyWord: string,
+  action: wordPlanActionType,  // 陌生 已掌握 模糊 认识
+}
+export function setWordPlan(data: wordPlanParamsType) {
+  return http({
+    url: `/word/plan`,
+    method: 'put',
     data
   })
 }

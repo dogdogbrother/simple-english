@@ -8,6 +8,7 @@ export const useUserStore = defineStore('user', {
       avatar: '',
       id: '',
       introduce: '',  // 个人简介
+      useNote: '',  // 正在学习中的单词本id
     }
   }),
   getters: {

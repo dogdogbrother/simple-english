@@ -23,20 +23,7 @@
             <h4>{{youdaoExplain.word}}</h4>
             <span>{{youdaoExplain.translation}}</span>
           </div>
-          <div 
-            v-if="youdaoExplain.isWord" 
-            class="phonetic" 
-            flex-s
-          >
-            <div class="uk" m-r-20>
-              <span m-r-5>英: [{{youdaoExplain.ukPhonetic}}]</span>
-              <SoundOutlined pointer @click="playPhonetic('uk')"/>
-            </div>
-            <div class="us">
-              <span m-r-5>美: [{{youdaoExplain.usPhonetic}}]</span>
-              <SoundOutlined pointer @click="playPhonetic('us')" />
-            </div>
-          </div>
+          <Phonetic :phonetic="youdaoExplain" m-b-10 m-t-5 v-if="youdaoExplain.isWord"/>
           <ul class="explain">
             <li v-for="explain in youdaoExplain.explains">{{explain}}</li>
           </ul>
@@ -47,25 +34,25 @@
       </Form.Item>
       <Form.Item
         label="笔记内容"
-        name="chineseMeaning"
+        name="wordMark"
       >
         <Textarea 
-          v-model:value="form.chineseMeaning"
+          v-model:value="form.wordMark"
           :autoSize="{ minRows: 3, maxRows: 6 }"
         ></Textarea>
-      </Form.Item>
-      <Form.Item label="笔记图片">
-        <Upload
-          action="/api/upload/illustration"
-          :headers="{
-            Authorization: getToken()
-          }"
-          @change="upload"
-          list-type="picture"
-        >
-          <Button><UploadOutlined/> upload </Button>
-        </Upload>
-
+        <Row m-t-10 flex-s>
+          <span :wrapper-col="{offset: 5}"></span>
+          <div flex-1>
+            <Upload
+              accept="image/*"
+              :customRequest="customUpload"
+              @change="upload"
+              list-type="picture"
+            >
+              <a href="javascript:;">点击上传笔记图片</a>
+            </Upload>
+          </div>
+        </Row>
       </Form.Item>
       <Form.Item :wrapper-col="{offset: 5}">
         <Button 
@@ -79,11 +66,13 @@
 </template>
 
 <script setup lang="ts">
-import { Form, Input, Button, Textarea, message, Upload } from 'ant-design-vue'
+import { Form, Input, Button, Textarea, message, Upload, Row } from 'ant-design-vue'
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { addWord, checkNoteWord, getYoudao } from '@/api/word'
-import { SoundOutlined, UploadOutlined } from '@ant-design/icons-vue'
+import { uploadImg } from '@/api/upload'
+import Phonetic from '@/widget/phonetic.vue'
+import { youdaoType } from '@/type/word'
 
 const loading = ref(false)
 const router = useRouter()
@@ -99,16 +88,21 @@ const statusMap: {[key: number]: StatusType } = {
 }
 const form = reactive({
   word: '',
-  chineseMeaning: ''
+  wordMark: ''
 })
-const youdaoExplain = ref<any>({})
-// 用于播放音标的实例
-let ukAudio: any = null
-let usAudio: any = null
+const fileList = ref<any>([])
+const youdaoExplain = ref<youdaoType>({})
+
 function onAddWord() {
+  if (checkWordStatus.value !== 2) return
+  const _fileList = fileList.value
+    .filter((file :any) => file.status === 'done')
+    .map((file :any) => file.response)
   addWord({
     ...form,
-    noteId
+    noteId,
+    fileList: _fileList,
+    keyWord: youdaoExplain.value.word
   }).then(() => {
     router.back()
   }).catch(err => {
@@ -143,16 +137,8 @@ function youdao() {
   return new Promise((resolve: any, reject: any) => {
     getYoudao({
       word: form.word
-    }).then(res => {
+    }).then((res: any) => {
       youdaoExplain.value = res
-      const { ukSpeech, usSpeech } = res as any
-      // 生成音频实例
-      if (ukSpeech) {
-        ukAudio = new Audio(ukSpeech)
-      }
-      if (usSpeech) {
-        usAudio = new Audio(usSpeech)
-      }
       resolve()
     }).catch(err => reject(err.msg))
   })
@@ -167,28 +153,19 @@ function getHelp(status: number) {
   }
 }
 
-// us 或者 uk
-function playPhonetic(action: String) {
-  if (action === 'uk') {
-    usAudio.pause()
-    ukAudio.play()
-  }
-  if (action === 'us') {
-    ukAudio.pause()
-    usAudio.play()
-  }
+function customUpload(fileEvent: any) {
+  const { onProgress, onSuccess, onError, file } = fileEvent
+  const formData = new FormData()
+  formData.append('file', file);
+  uploadImg(formData, (progressEvent: any) => {
+    let complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+    onProgress(complete, file)
+  }).then(res => {
+    onSuccess(res, file)
+  }).catch(() => onError("上传图片失败", file))
 }
-
-function getToken() {
-  const token = localStorage.getItem('token')
-  if (token) {
-    return `Bearer ${token}`
-  } 
-}
-
-function upload(fn: any) {
-  console.log(fn);
-  
+function upload(fileEvent: any) {
+  fileList.value = fileEvent.fileList
 }
 </script>
 
@@ -220,9 +197,5 @@ function upload(fn: any) {
       margin-bottom: 10px;
     }
   }
-}
-.phonetic {
-  color: #666;
-  margin-bottom: 10px;
 }
 </style>

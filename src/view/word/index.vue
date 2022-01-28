@@ -3,17 +3,13 @@
     <Button type="primary">时间排序</Button>
     <Button type="primary">陌生度排序</Button>
     <Button type="primary">隐藏已掌握</Button>
-    <Button 
-      type="primary"
-      @click="hideAllWord"
-    >{{hideMeaning ? '显示' : '隐藏'}}中译</Button>
-    <Button type="primary" @click="selecNote">切换到此单词本</Button>
+    <Button v-if="useStore.userInfo.useNote != noteId" type="primary" @click="selecNote">切换到此单词本</Button>
   </div>
   <ul class="word-box">
     <li v-for="word in wordList" :key="word.id">
-      <span class="word">{{word.word}}</span>
-      <Button @click="showWord(word.id)" v-if="hideWords.includes(word.id as never)" type="text">展示中译</Button>
-      <span v-else>{{word.chineseMeaning}}</span>
+      <span class="word">{{word.keyWord}}</span>
+      <span>{{word.youdao.translation}}</span>
+      <span>{{planMap[word.plan as string] || "未学习"}}</span>
     </li>
   </ul>
 </template>
@@ -24,40 +20,32 @@ import { useNote } from '@/api/note'
 import { useRoute } from 'vue-router'
 import { Button } from 'ant-design-vue'
 import { ref } from 'vue'
-
+import { useUserStore } from '@/store'
+import { wordType } from '@/type/word'
 const { noteId } = useRoute().params
-const wordList: any = ref([])
-const hideMeaning = ref(false)
-const hideWords = ref([])
+const wordList = ref<wordType[]>([])
+const useStore = useUserStore()
 
-getNoteWord(noteId as string).then(res => {
+const planMap: {[key: string]: string } = {
+  "0": "陌生", 
+  "1": "见过", 
+  "2": "眼熟", 
+  "3": "了解", 
+  "4": "了解", 
+  "5": "熟悉", 
+  "6": "掌握", 
+}
+getNoteWord(noteId as string).then((res: any) => {
   wordList.value = res
 })
 
-function hideAllWord() {
-  if (hideMeaning.value) {
-    hideWords.value = []
-  } else {
-    hideWords.value = wordList.value.map((word: any) => word.id)
-  }
-  hideMeaning.value = true
-}
-
-function showWord(wordId: any) {
-  hideWords.value = hideWords.value.filter(word => word !== wordId)
-  // 如果当前页面都没有隐藏的单词了,就改变总开关
-  if(hideWords.value.length === 0) {
-    hideMeaning.value = false
-  }
-}
-
 // 切换单词本
 function selecNote() {
-  useNote(noteId).then(res => {
-    console.log(res);
+  useNote(noteId).then(() => {
+    // userInfo 下 的 useNote 字段更新了
+    useStore.setUserInfo()
   })
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -80,6 +68,9 @@ function selecNote() {
     .word {
       font-weight: bold;
     }
+  }
+  span {
+    flex: 1;
   }
 }
 </style>

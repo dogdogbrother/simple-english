@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import UserInfo from './component/UserInfo.vue'
+import UserInfo from './component/userInfo.vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/store'
 import { Tabs } from 'ant-design-vue'

@@ -7,6 +7,7 @@
       <div class="header-main" flex-b>
         <nav flex-b>
           <span @click="toPage('/square')">动态广场</span>
+          <span @click="toPage('/memory')">背单词</span>
         </nav>
         <Dropdown>
           <Avatar pointer :src="useStore.userInfo.avatar">{{useStore.userInfo.username}}</Avatar>
@@ -80,8 +81,10 @@ header {
       flex: 1;
     }
     nav {
+      margin-right: -30px;
       span {
         cursor: pointer;
+        margin-right: 30px;
       }
     }
   }

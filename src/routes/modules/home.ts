@@ -30,6 +30,10 @@ export default [
         path: 'user/:userId',
         component: () => import('@/view/user/index.vue')
       },
+      {
+        path: 'memory',
+        component: () => import('@/view/memory/index.vue')
+      },
     ]
   }
 ]
