@@ -50,9 +50,7 @@ function onAddNote(values: any) {
   loading.value = true
   addNote(values).then(() => {
     message.success("创建单词本成功")
-    setTimeout(() => {
-      router.back()
-    }, 500)
+    router.back()
   }).finally(() => loading.value = false)
 }
 </script>

@@ -33,3 +33,12 @@ export function oneUserInfo(userId: string) {
     method: 'get'
   })
 }
+
+// 某个用户信息
+export function updateUserInfo(data: any) {
+  return http({
+    url: '/user/info',
+    method: 'put',
+    data
+  })
+}

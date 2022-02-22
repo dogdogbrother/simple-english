@@ -1,4 +1,5 @@
 <template>
+  <UseUser />
   <div class="oprate-btns">
     <Button type="primary">时间排序</Button>
     <Button type="primary">陌生度排序</Button>
@@ -22,6 +23,8 @@ import { Button } from 'ant-design-vue'
 import { ref } from 'vue'
 import { useUserStore } from '@/store'
 import { wordType } from '@/type/word'
+import UseUser from './component/useUser.vue'
+
 const { noteId } = useRoute().params
 const wordList = ref<wordType[]>([])
 const useStore = useUserStore()

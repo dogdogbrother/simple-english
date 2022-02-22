@@ -19,6 +19,9 @@ export const useUserStore = defineStore('user', {
   actions: {
     async setUserInfo() {
       this.userInfo = await userInfo() as any
+    },
+    updateUserInfo(userInfo: any) {
+      this.userInfo = userInfo
     }
   }
 })

@@ -45,15 +45,18 @@
 <script setup lang="ts">
 import { oneUserInfo } from '@/api/user'
 import { ref, reactive } from 'vue'
-import { Form, Input, Textarea, Button } from 'ant-design-vue'
+import { Form, Input, Textarea, Button, message } from 'ant-design-vue'
 import UserShow from '@/widget/userShow.vue'
 import { userInfoType } from '@/type/user'
+import { updateUserInfo } from '@/api/user'
+import { useUserStore } from '@/store'
 
 const props = defineProps({
   userId: String,
   _userId: String,  // 登录的这个人的userId
 })
 
+const useStore = useUserStore()
 const userInfo = ref<userInfoType>({})
 const isEdit = ref(false)
 const form = reactive<userInfoType>({
@@ -64,16 +67,26 @@ const form = reactive<userInfoType>({
 const loading = ref(false)
 
 oneUserInfo(props.userId as string).then((res) => {
-  const resData = res as userInfoType
-  userInfo.value = resData
-  const { username, nickname, avatar, introduce } = resData
-  form.nickname = nickname || username
-  form.avatar = avatar
-  form.introduce = introduce
+  setUserInfo(res as userInfoType)
+
 })
 
 function editUser(values: userInfoType) {
-  console.log(values)
+  loading.value = true
+  updateUserInfo(values).then(res => {
+    setUserInfo(res as userInfoType)
+    useStore.updateUserInfo(res)
+    isEdit.value = false
+    message.success("更新用户信息完成")
+  }).finally(() => loading.value = false)
+}
+
+function setUserInfo(data: userInfoType) {
+  userInfo.value = data
+  const { username, nickname, avatar, introduce } = data
+  form.nickname = nickname || username
+  form.avatar = avatar
+  form.introduce = introduce
 }
 </script>
 

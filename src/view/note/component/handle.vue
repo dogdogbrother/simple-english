@@ -22,12 +22,13 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function onSearch() {
-  alert(22)
+  alert('暂时没啥量,搜索稍后再写')
 }
 
 function toCreate() {
   router.push("/create-note")
 }
+
 </script>
 
 <style lang="scss" scoped>

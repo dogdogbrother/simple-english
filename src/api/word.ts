@@ -34,10 +34,11 @@ export function getYoudao(data: any) {
   })
 }
 
+// 陌生 已掌握 模糊 认识
 export type wordPlanActionType = 0 | 1 | 2 | 3
 interface wordPlanParamsType {
   keyWord: string,
-  action: wordPlanActionType,  // 陌生 已掌握 模糊 认识
+  action: wordPlanActionType,  
 }
 export function setWordPlan(data: wordPlanParamsType) {
   return http({
@@ -46,4 +47,14 @@ export function setWordPlan(data: wordPlanParamsType) {
     data
   })
 }
+
+// 获取单词本的用户们
+export function getWordUseUser(noteId: string) {
+  return http({
+    url: `/word/useUser`,
+    method: 'get',
+    params: { noteId }
+  })
+}
+
 
