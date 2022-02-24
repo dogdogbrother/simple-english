@@ -1,5 +1,6 @@
 <template>
-  <div class="square-wrap">
+  <div v-if="loading">广场信息加载中...</div>
+  <div v-else class="square-wrap">
     <DynamicList :dynamicList="squareList" />
   </div>
 </template>
@@ -11,10 +12,12 @@ import DynamicList from '@/components/dynamicList/index.vue'
 import { squareType } from '@/type/square'
 
 const squareList = ref<squareType[]>([])
+const loading = ref(false)
 
+loading.value = true
 getSquareList().then((res: any) => {
   squareList.value = res
-})
+}).finally(() => loading.value = false)
 
 </script>
 

@@ -49,14 +49,17 @@
               @change="upload"
               list-type="picture"
             >
-              <a href="javascript:;">点击上传笔记图片</a>
+              <a href="javascript:;">
+                点击上传笔记图片
+                <span v-if="uploadLoading">(正在努力上传图片中...)</span>
+              </a>
             </Upload>
           </div>
         </Row>
       </Form.Item>
       <Form.Item :wrapper-col="{offset: 5}">
         <Button 
-          :loading="loading"
+          :loading="loading || uploadLoading"
           type="primary" 
           html-type="submit"
         >创建</Button>
@@ -75,6 +78,7 @@ import Phonetic from '@/widget/phonetic.vue'
 import { youdaoType } from '@/type/word'
 
 const loading = ref(false)
+const uploadLoading = ref(false)
 const router = useRouter()
 const checkWordStatus = ref<0 | 1 | 2 | 3>(0)  // 0 是未校验, 1 是loading, 2 是成功, 3 是失败
 
@@ -165,6 +169,11 @@ function customUpload(fileEvent: any) {
   }).catch(() => onError("上传图片失败", file))
 }
 function upload(fileEvent: any) {
+  const { status } = fileEvent.file
+  console.log(status)
+  if (status === 'uploading') {
+    uploadLoading.value = true
+  } else  uploadLoading.value = false
   fileList.value = fileEvent.fileList
 }
 </script>
