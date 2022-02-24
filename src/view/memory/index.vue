@@ -48,8 +48,15 @@
       <span style="font-size: 16px;">还没有在学习中的单词本哦,去选一个吧</span>
       <Button type="primary" m-l-20 @click="toHome">去首页转转</Button>
     </div>
+    <div v-else-if="wordList.length === 0">
+      <span>单词本还是空的哦</span>
+    </div>
+    <div v-else-if="planSet.all === planSet.grasp">
+      <span>牛哇,单词本的 {{planSet.all}} 个单词都学完啦~</span>
+    </div>
     <div v-else>
-      <span>恭喜完成</span>
+      <span>恭喜完成一组学习~ 再来一组?</span>
+      <Button type="primary" m-l-20 @click="toHome">再学一遍</Button>
     </div>
   </div>
 </template>
@@ -57,7 +64,7 @@
 <script setup lang="ts">
 import { getNoteWord, setWordPlan, wordPlanActionType } from '@/api/word'
 import { useUserStore } from '@/store'
-import { watch, ref, computed, reactive } from 'vue'
+import { watch, ref, computed } from 'vue'
 import { wordType } from '@/type/word'
 import { Button } from 'ant-design-vue';
 import Phonetic from '@/widget/phonetic.vue'
@@ -106,6 +113,8 @@ function getNoteWordFn() {
 }
 
 function plan(word: wordType, action: wordPlanActionType) {
+  showExplain.value = false
+  showWordMark.value = false
   const { keyWord } = word
   setWordPlan({
     keyWord,
@@ -143,8 +152,6 @@ function setPlanSet(data: wordType[]) {
       studying++
     } else notLearn++
   })
-  console.log(all);
-  
   planSet.value = {
     all,
     grasp,
