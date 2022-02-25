@@ -49,14 +49,17 @@
               @change="upload"
               list-type="picture"
             >
-              <a href="javascript:;">点击上传笔记图片</a>
+              <a href="javascript:;">
+                点击上传笔记图片
+                <span v-if="uploadLoading">(正在努力上传图片中...)</span>
+              </a>
             </Upload>
           </div>
         </Row>
       </Form.Item>
       <Form.Item :wrapper-col="{offset: 5}">
         <Button 
-          :loading="loading && uploadLoading"
+          :loading="loading || uploadLoading"
           type="primary" 
           html-type="submit"
         >创建</Button>
