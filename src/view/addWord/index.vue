@@ -49,10 +49,12 @@
               @change="upload"
               list-type="picture"
             >
-              <a href="javascript:;">
-                点击上传笔记图片
-                <span v-if="uploadLoading">(正在努力上传图片中...)</span>
-              </a>
+              <div class="upload-btn">
+                <a href="javascript:;">
+                  点击上传笔记图片
+                  <span v-if="uploadLoading">(正在努力上传图片中...)</span>
+                </a>
+              </div>
             </Upload>
           </div>
         </Row>
@@ -205,6 +207,12 @@ function upload(fileEvent: any) {
     li {
       margin-bottom: 10px;
     }
+  }
+}
+.upload-btn {
+  span {
+    font-size: 12px;
+    color: rgba($color: #666, $alpha: 0.6);
   }
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div class="footer">
     <ul>
-      <li>About</li>
-      <li>Contact us</li>
-      <li>Join us</li>
+      <li @click="emptyFn">About</li>
+      <li @click="emptyFn">Contact us</li>
+      <li @click="emptyFn">Join us</li>
     </ul>
     <div class="icons">
       <qq-outlined />
@@ -15,6 +15,10 @@
 
 <script setup lang="ts">
 import { QqOutlined, WechatOutlined, GithubOutlined } from '@ant-design/icons-vue'
+
+function emptyFn() {
+  alert("没开发,没东西")
+}
 </script>
 
 <style lang="scss" scoped>

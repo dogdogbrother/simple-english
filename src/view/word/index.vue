@@ -4,7 +4,12 @@
     <Button type="primary">时间排序</Button>
     <Button type="primary">陌生度排序</Button>
     <Button type="primary">隐藏已掌握</Button>
-    <Button v-if="useStore.userInfo.useNote != noteId" type="primary" @click="selecNote">切换到此单词本</Button>
+    <Button 
+      v-if="useStore.userInfo.useNote != noteId" 
+      type="primary" 
+      @click="selecNote"
+      :loading="useLoading"
+    >{{useLoading ? "正在切换中" : "切换到此单词本"}}</Button>
   </div>
   <ul class="word-box">
     <li v-for="word in wordList" :key="word.id">
@@ -28,6 +33,7 @@ import UseUser from './component/useUser.vue'
 const { noteId } = useRoute().params
 const wordList = ref<wordType[]>([])
 const useStore = useUserStore()
+const useLoading = ref(false)
 
 const planMap: {[key: string]: string } = {
   "0": "陌生", 
@@ -38,16 +44,19 @@ const planMap: {[key: string]: string } = {
   "5": "熟悉", 
   "6": "掌握", 
 }
+
 getNoteWord(noteId as string).then((res: any) => {
   wordList.value = res
 })
 
 // 切换单词本
 function selecNote() {
+  useLoading.value = true
   useNote(noteId).then(() => {
     // userInfo 下 的 useNote 字段更新了
     useStore.setUserInfo()
-  })
+  }).finally(() => useLoading.value = false)
+  
 }
 </script>
 

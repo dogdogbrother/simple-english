@@ -2,7 +2,7 @@
   <header>
     <section>
       <div pointer @click="toPage('/')">
-        网站logo
+        单词本
       </div>
       <div class="header-main" flex-b>
         <nav flex-b>

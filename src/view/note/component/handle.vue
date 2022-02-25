@@ -1,13 +1,13 @@
 <template>
   <section>
     <Form layout="inline">
-      <Form.Item>
+      <!-- <Form.Item>
         <Input 
           allowClear 
           placeholder="输入单词本或单词"
           @pressEnter="onSearch"
         />
-      </Form.Item>
+      </Form.Item> -->
       <Form.Item>
         <Button type="primary" @click="toCreate">新建单词本</Button>
       </Form.Item>

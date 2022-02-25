@@ -19,7 +19,9 @@
           <!-- 单纯写个空标签 为了 flex 布局 -->
           <i v-else></i>
           <div class="user-info" flex-b  @click.stop="toUser(note.user.id as number)">
-            <Avatar :src="note.user.avatar" size="small"/>
+            <div flex-1>
+              <Avatar :src="note.user.avatar" size="small" />
+            </div>
             <span ellipsis>{{note.user.nickname}}</span>
           </div>
         </div>
