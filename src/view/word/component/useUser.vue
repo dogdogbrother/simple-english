@@ -25,11 +25,17 @@ const { noteId } = useRoute().params
 const users = ref<userInfoType[]>([])
 const loading = ref(false)
 
-loading.value = true
-getWordUseUser(noteId as string).then((res: any) => {
-  users.value = res
-}).finally(() => loading.value = false)
 
+function getWordUseUserFn() {
+  loading.value = true
+  getWordUseUser(noteId as string).then((res: any) => {
+    users.value = res
+  }).finally(() => loading.value = false)
+}
+getWordUseUserFn()
+defineExpose({
+  getWordUseUserFn
+})
 </script>
 
 <style lang="scss" scoped>

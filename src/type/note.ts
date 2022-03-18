@@ -1,6 +1,5 @@
 import { userInfoType } from './user'
 
-
 // 单词本
 export interface noteType {
   createdAt: string,

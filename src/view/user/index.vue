@@ -8,12 +8,16 @@
       <Tabs.TabPane key="2" tab="单词本">
         <NoteList :noteList="noteList" />
       </Tabs.TabPane>
+      <Tabs.TabPane key="3" tab="打卡日历">
+        <Calendar />
+      </Tabs.TabPane>
     </Tabs>
   </div>
 </template>
 
 <script setup lang="ts">
 import UserInfo from './component/userInfo.vue'
+import Calendar from './component/calendar.vue'
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/store'
 import { Tabs } from 'ant-design-vue'
