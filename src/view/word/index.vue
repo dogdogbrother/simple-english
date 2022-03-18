@@ -1,11 +1,24 @@
 <template>
-  <UseUser />
+  <UseUser ref="useUserRef" />
   <div class="oprate-btns">
     <Button type="primary">时间排序</Button>
     <Button type="primary">陌生度排序</Button>
     <Button type="primary">隐藏已掌握</Button>
+    <Popconfirm 
+      v-if="useStore.userInfo.useNote "
+      placement="bottom" 
+      ok-text="确定" 
+      cancel-text="不了" 
+      title="你已经有了正在学习中的单词本了,确定要切换吗"
+      @confirm="selecNote">
+      <Button
+        v-if="useStore.userInfo.useNote != noteId" 
+        type="primary" 
+        :loading="useLoading"
+      >{{useLoading ? "正在切换中" : "切换到此单词本"}}</Button>
+    </Popconfirm>
     <Button 
-      v-if="useStore.userInfo.useNote != noteId" 
+      v-else-if="useStore.userInfo.useNote != noteId" 
       type="primary" 
       @click="selecNote"
       :loading="useLoading"
@@ -24,12 +37,14 @@
 import { getNoteWord } from '@/api/word'
 import { useNote } from '@/api/note'
 import { useRoute } from 'vue-router'
-import { Button } from 'ant-design-vue'
+import { Button, Popconfirm } from 'ant-design-vue'
 import { ref } from 'vue'
 import { useUserStore } from '@/store'
 import { wordType } from '@/type/word'
 import UseUser from './component/useUser.vue'
+import { getCurrentInstance } from '@vue/runtime-core'
 
+const currentInstance: any = getCurrentInstance()
 const { noteId } = useRoute().params
 const wordList = ref<wordType[]>([])
 const useStore = useUserStore()
@@ -55,6 +70,7 @@ function selecNote() {
   useNote(noteId).then(() => {
     // userInfo 下 的 useNote 字段更新了
     useStore.setUserInfo()
+    currentInstance.ctx.$refs.useUserRef.getWordUseUserFn()
   }).finally(() => useLoading.value = false)
   
 }
