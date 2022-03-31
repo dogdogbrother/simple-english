@@ -10,12 +10,11 @@
         label="单词"
         name="word"
         :has-feedback="checkWordStatus !== 0"
-        @input="initCheckStatus"
         :validate-status="statusMap[checkWordStatus]"
         :help="getHelp(checkWordStatus)"
         :rules="[{ required: true, message: '请输入单词' }]"
       >
-        <Input v-model:value="form.word" @blur="checkWordAndGetInfo"/>
+        <Input @input="initCheckStatus" v-model:value="form.word" @blur="checkWordAndGetInfo"/>
       </Form.Item>
       <Form.Item label="有道翻译" v-if="youdaoExplain.word">
         <div class="youdao-card">
