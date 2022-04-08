@@ -118,6 +118,8 @@ const conditionWordList = computed(() => {
 async function showWordInfo(word: wordType) {
   drawerState.value = true
   await nextTick()
+  console.log(currentInstance.ctx.$refs.wordInfo);
+  
   currentInstance.ctx.$refs.wordInfo.setWordInfo(word)
 }
 </script>
