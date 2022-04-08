@@ -19,7 +19,7 @@
           <div v-if="showExplain">
             <p blod m-t-10 m-b-10 size-20>{{getWord.youdao.translation}}</p>
             <ul>
-              <li m-b-5 v-for="explains in getWord.youdao.explains">{{explains}}</li>
+              <li m-b-5 v-for="explain in getWord.youdao.explains">{{explain}}</li>
             </ul>
           </div>
         </div>

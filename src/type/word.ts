@@ -7,7 +7,7 @@ export interface wordType {
   keyWord: string,
   word: string,
   wordMark: string,
-  plan: null | planType,
+  plan: planType,
   youdao: youdaoType
 }
 
