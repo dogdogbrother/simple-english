@@ -5,8 +5,10 @@
       <h4 style="margin: 0 10px 0 0;">正在学习的朋友们:</h4>
       <div>
         <Avatar
+          pointer
           v-for="user in users" 
           :key="user.id"
+          @click="toUser(user)"
           :src="user.avatar"/>
       </div>
     </div>
@@ -33,6 +35,10 @@ function getWordUseUserFn() {
   }).finally(() => loading.value = false)
 }
 getWordUseUserFn()
+
+function toUser(user: userInfoType) {
+  window.open(`/user/${user.id}`)
+}
 defineExpose({
   getWordUseUserFn
 })

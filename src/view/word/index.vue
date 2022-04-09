@@ -1,7 +1,11 @@
 <template>
   <UseUser ref="useUserRef" />
   <div class="oprate-btns">
-    <Button type="primary" @click="changeGraspStatus">{{isShowGrasp ? '隐藏' : '显示'}}已掌握</Button>
+    <div>
+      <Button type="primary" @click="changeGraspStatus">{{isShowGrasp ? '隐藏' : '显示'}}已掌握</Button>
+      <span m-l-20 m-r-10>已掌握{{getGraspNum}}个单词</span>
+      <span>{{getNoGraspNum}}个单词学习中</span>
+    </div>
     <Popconfirm 
       v-if="useStore.userInfo.useNote "
       placement="bottom" 
@@ -26,7 +30,15 @@
     <li v-for="word in conditionWordList" :key="word.id">
       <span class="word" @click="showWordInfo(word)">{{word.keyWord}}</span>
       <span>{{word.youdao.translation}}</span>
-      <span>{{planMap[word.plan as string] || "未学习"}}</span>
+      <div class="narrow">{{planMap[word.plan as string] || "未学习"}}</div>
+      <Popconfirm 
+        placement="bottom" 
+        ok-text="确定" 
+        cancel-text="不了" 
+        :title='`要把这个单词设置为${word.plan === "6" ? "陌生" : "掌握"}吗?`'
+        @confirm="setPlan(word)">
+        <Button type="link">设为{{word.plan === '6' ? '陌生' : '掌握'}}</Button>
+      </Popconfirm>
     </li>
   </ul>
   <!-- 这个地方待优化一下,如果是pc端进来的就是左侧滑出带宽度,否则就是下面弹出带高度 -->
@@ -51,10 +63,10 @@
 </template>
 
 <script setup lang="ts">
-import { getNoteWord } from '@/api/word'
+import { getNoteWord, setWordPlan } from '@/api/word'
 import { useNote } from '@/api/note'
 import { useRoute } from 'vue-router'
-import { Button, Popconfirm, Drawer } from 'ant-design-vue'
+import { Button, Popconfirm, Drawer, message } from 'ant-design-vue'
 import { ref, computed, nextTick } from 'vue'
 import { useUserStore } from '@/store'
 import { wordType } from '@/type/word'
@@ -70,9 +82,7 @@ const useLoading = ref(false)
 
 const _isShowGrasp = localStorage.getItem("isShowGrasp")
 const isShowGrasp = ref(!!_isShowGrasp)  // 是否显示已掌握
-
 const drawerState = ref(false)  // 抽屉的开关
-
 // pc端和移动端抽屉配置稍有不同
 const _isPc = ref(isPc)
 
@@ -86,9 +96,12 @@ const planMap: {[key: string]: string } = {
   "6": "掌握", 
 }
 
-getNoteWord(noteId as string).then((res: any) => {
-  wordList.value = res
-})
+function getNoteWordFn() {
+  getNoteWord(noteId as string).then((res: any) => {
+    wordList.value = res
+  })
+}
+getNoteWordFn()
 
 // 切换单词本
 function selecNote() {
@@ -96,7 +109,7 @@ function selecNote() {
   useNote(noteId).then(() => {
     // userInfo 下 的 useNote 字段更新了
     useStore.setUserInfo()
-    currentInstance.ctx.$refs.useUserRef.getWordUseUserFn()
+    currentInstance.proxy.$refs.useUserRef.getWordUseUserFn()
   }).finally(() => useLoading.value = false)
 }
 
@@ -114,11 +127,32 @@ const conditionWordList = computed(() => {
   return wordList.value
 })
 
+// 获取没掌握的单词数量
+const getNoGraspNum = computed(() => {
+  return wordList.value.filter(word => word.plan !== '6').length
+})
+
+// 获取已掌握的单词数量
+const getGraspNum = computed(() => {
+  return wordList.value.filter(word => word.plan === '6').length
+})
+
 // 显示单词的具体内容
 async function showWordInfo(word: wordType) {
   drawerState.value = true
   await nextTick()
-  currentInstance.ctx.$refs.wordInfo.setWordInfo(word)
+  currentInstance.proxy.$refs.wordInfo.setWordInfo(word)
+}
+
+// 设置单词为陌生或者掌握
+function setPlan(word: wordType) {
+  setWordPlan({
+    action: word.plan === '6' ? 0 : 1,
+    keyWord: word.keyWord
+  }).then(() => {
+    getNoteWordFn()
+    message.success("设置成功")
+  })
 }
 </script>
 
@@ -147,6 +181,9 @@ async function showWordInfo(word: wordType) {
       &:hover {
         color: #4b7dcc;
       }
+    }
+    .narrow {
+      width: 52px;
     }
   }
   span {

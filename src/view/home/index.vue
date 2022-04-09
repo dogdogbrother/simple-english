@@ -16,9 +16,6 @@
               <Menu.Item>
                 <span @click="toUser">我的主页</span>
               </Menu.Item>
-              <Menu.Item disabled>
-                <span>我的单词本</span>
-              </Menu.Item>
               <Menu.Divider />
               <Menu.Item>
                 <span @click="logout">退出登录</span>
@@ -54,7 +51,7 @@ function toPage(path: string) {
 }
 
 function toUser() {
-  router.push(`/user/${useStore.userInfo.id}`)
+  window.open(`/user/${useStore.userInfo.id}`)
 }
 
 </script>

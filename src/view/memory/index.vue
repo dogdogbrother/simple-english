@@ -48,15 +48,12 @@
       <span style="font-size: 16px;">还没有在学习中的单词本哦,去选一个吧</span>
       <Button type="primary" m-l-20 @click="toHome">去首页转转</Button>
     </div>
-    <div v-else-if="wordList.length === 0">
+    <div v-else-if="wordIsEmpty">
       <span>单词本还是空的哦</span>
     </div>
     <div v-else-if="planSet.all === planSet.grasp">
       <span>牛哇,单词本的 {{planSet.all}} 个单词都学完啦~</span>
-    </div>
-    <div v-else>
-      <span>恭喜完成一组学习~ 再来一组?</span>
-      <Button type="primary" m-l-20 @click="toHome">再学一遍</Button>
+      <Button type="primary" m-l-20 @click="repetition">再学一遍</Button>
     </div>
   </div>
 </template>
@@ -72,6 +69,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const userStore = useUserStore()
+
 // 是全部单词, 先背这个数组里面的
 const wordList = ref<wordType[]>([])
 // 不熟悉的单词 wordList背光了 到这里来
@@ -94,6 +92,14 @@ const getWord = computed(() => {
   return wordList.value[0] || unfamiliarWord.value[0] || 0
 })
 
+// 单词本是不是空的,把三个单词本都加一下是不是0
+const wordIsEmpty = computed(() => {
+  const wordLength = wordList.value.length
+  const unfamiliarLength = unfamiliarWord.value.length
+  const finishLength = finish.value.length
+  return !(wordLength + unfamiliarLength + finishLength)
+})
+
 if (userStore.userInfo.useNote) {
   getNoteWordFn()
 }
@@ -105,6 +111,7 @@ function getNoteWordFn() {
   getNoteWord(userStore.userInfo.useNote).then((res: any) => {
     setPlanSet(res as wordType[])
     const filterRes = res.filter((word: wordType) => word.plan !=='6')
+    finish.value = res.filter((word: wordType) => word.plan ==='6')
     filterRes.sort(() => {
       return 0.5 - Math.random()
     })
@@ -138,6 +145,10 @@ function plan(word: wordType, action: wordPlanActionType) {
 
 function toHome() {
   router.push('/')
+}
+
+function repetition() {
+  unfamiliarWord.value = [...finish.value]
 }
 
 function setPlanSet(data: wordType[]) {

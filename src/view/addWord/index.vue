@@ -171,7 +171,6 @@ function customUpload(fileEvent: any) {
 }
 function upload(fileEvent: any) {
   const { status } = fileEvent.file
-  console.log(status)
   if (status === 'uploading') {
     uploadLoading.value = true
   } else  uploadLoading.value = false

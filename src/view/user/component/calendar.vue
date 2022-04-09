@@ -1,6 +1,6 @@
 <template>
   <div class="btns">
-    <RadioGroup v-model="thisYear" :default-value="thisYear" button-style="solid">
+    <RadioGroup v-model:value="thisYear" :default-value="thisYear" button-style="solid">
       <radio-button 
         v-for="year in yaerList"
         :value="year"
@@ -49,12 +49,15 @@ import { RadioGroup, RadioButton, Tooltip } from 'ant-design-vue'
 import { ref } from 'vue'
 import { getYearAllActive } from '@/api/active'
 import { activeType } from "@/type/active";
+import { useRoute } from "vue-router";
 
 const yaerList = ref(['2022'])
 const thisYear = ref(yaerList.value[0])
+
 const yearAllDays = ref(getYearAllDay(thisYear.value))
 const levelList = ['碰了下而已', '稍微背了下单词', '静下心学习了', '很努力', '即将成神']
 const today = dayjs().format('YYYY-MM-DD')
+const { userId } = useRoute().params
 /**
  * @description 获取一年全部的天数,用dayjs计算出每个月的,然后拼装成一个对象
  * @param year '2022'
@@ -79,7 +82,7 @@ function getYearAllDay(year: string) {
   return { ...allDay } 
 }
 function getYearAllActiveFn() {
-  getYearAllActive(thisYear.value).then((res: any) => {
+  getYearAllActive(thisYear.value, userId as string).then((res: any) => {
     res.forEach((day: activeType) => {
       yearAllDays.value[day.createdTime] = day.active
     })
