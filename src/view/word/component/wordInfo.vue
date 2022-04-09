@@ -25,9 +25,9 @@ import Phonetic from '@/widget/phonetic.vue'
 const wordInfo = ref<wordType>()
 
 function setWordInfo(info: wordType) {
-  console.log(info);
   wordInfo.value = info
 }
+
 defineExpose({
   setWordInfo
 })

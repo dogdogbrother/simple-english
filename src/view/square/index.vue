@@ -1,7 +1,7 @@
 <template>
-  <div v-if="loading">广场信息加载中...</div>
-  <div v-else class="square-wrap">
-    <DynamicList :dynamicList="squareList" />
+  <div class="square-wrap">
+    <div v-if="loading">广场信息加载中...</div>
+    <DynamicList :dynamicList="squareList" v-else />
   </div>
 </template>
 

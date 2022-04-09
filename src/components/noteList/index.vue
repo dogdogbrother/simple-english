@@ -12,7 +12,7 @@
         <p class="word-count">单词数量: {{note.wordCount}}个</p>
         <div clang="footer" flex-b>
           <span 
-            v-if="userStore.userInfo.id == note.userId"
+            v-if="isMeFn(note.userId as string)"
             class="btn" 
             @click.stop="toAddWord(note.id)"
           >添加单词</span>
@@ -34,11 +34,11 @@
 import { Avatar } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
 import { noteType } from '@/type/note'
-import { useUserStore } from '@/store'
+import { useIsMe } from '@/utils/hook'
 
 const router = useRouter()
 
-const userStore = useUserStore()
+const { isMeFn } = useIsMe()
 
 const props = defineProps<{
   noteList: noteType[]

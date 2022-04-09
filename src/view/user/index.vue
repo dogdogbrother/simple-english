@@ -6,7 +6,8 @@
         <DynamicList :dynamicList="squareList"/>
       </Tabs.TabPane>
       <Tabs.TabPane key="2" tab="单词本">
-        <NoteList :noteList="noteList" />
+        <NoteList :noteList="noteList" v-if="noteList.length" />
+        <span v-else>还没有创建过单词本</span>
       </Tabs.TabPane>
       <Tabs.TabPane key="3" tab="打卡日历">
         <Calendar />
