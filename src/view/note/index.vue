@@ -19,7 +19,7 @@
       <NoteList :noteList="noteList" />
     </div>
   </template>
-  <span v-else>加载数据中...</span>
+  <Loading msg="单词本加载中..." type="inline" v-else />
 </template>
 
 <script setup lang="ts">
@@ -30,6 +30,7 @@ import { ref } from 'vue'
 import { noteType } from '@/type/note'
 import { Button } from 'ant-design-vue'
 import { useRouter } from 'vue-router'
+import Loading from '@/components/loading/index.vue'
 
 const router = useRouter()
 const noteList = ref<noteType[]>([])

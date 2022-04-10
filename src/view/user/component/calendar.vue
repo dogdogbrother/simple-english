@@ -125,7 +125,6 @@ getYearAllActiveFn()
     height: 100%;
     .month {
       margin: 0;
-      height: 204px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;

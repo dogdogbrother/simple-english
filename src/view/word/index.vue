@@ -41,7 +41,6 @@
       </Popconfirm>
     </li>
   </ul>
-  <!-- 这个地方待优化一下,如果是pc端进来的就是左侧滑出带宽度,否则就是下面弹出带高度 -->
   <Drawer
     v-if="_isPc"
     :visible="drawerState"

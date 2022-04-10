@@ -1,6 +1,7 @@
 <template>
   <div class="wrap">
-    <div v-if="getWord">
+    <Loading msg="单词加载中~" v-if="loading" />
+    <div v-else-if="getWord">
       <div class="word-card" >
         <h2>{{getWord.keyWord}}</h2>
         <div flex-c m-b-10>
@@ -44,14 +45,14 @@
         <li>未学习: {{planSet.notLearn}}</li>
       </div>
     </div>
-    <div v-else-if="!userStore.userInfo.useNote">
+    <div v-else-if="userStore.userInfo.id && !userStore.userInfo.useNote">
       <span style="font-size: 16px;">还没有在学习中的单词本哦,去选一个吧</span>
       <Button type="primary" m-l-20 @click="toHome">去首页转转</Button>
     </div>
-    <div v-else-if="wordIsEmpty">
+    <div v-else-if="isEmptyWord">
       <span>单词本还是空的哦</span>
     </div>
-    <div v-else-if="planSet.all === planSet.grasp">
+    <div v-else-if="planSet.all === planSet.grasp && isEmptyWord">
       <span>牛哇,单词本的 {{planSet.all}} 个单词都学完啦~</span>
       <Button type="primary" m-l-20 @click="repetition">再学一遍</Button>
     </div>
@@ -66,9 +67,12 @@ import { wordType } from '@/type/word'
 import { Button } from 'ant-design-vue';
 import Phonetic from '@/widget/phonetic.vue'
 import { useRouter } from 'vue-router'
+import Loading from '@/components/loading/index.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+const loading = ref(false)
+const isEmptyWord = ref(false) // 比较粗糙的做法
 
 // 是全部单词, 先背这个数组里面的
 const wordList = ref<wordType[]>([])
@@ -92,14 +96,6 @@ const getWord = computed(() => {
   return wordList.value[0] || unfamiliarWord.value[0] || 0
 })
 
-// 单词本是不是空的,把三个单词本都加一下是不是0
-const wordIsEmpty = computed(() => {
-  const wordLength = wordList.value.length
-  const unfamiliarLength = unfamiliarWord.value.length
-  const finishLength = finish.value.length
-  return !(wordLength + unfamiliarLength + finishLength)
-})
-
 if (userStore.userInfo.useNote) {
   getNoteWordFn()
 }
@@ -108,15 +104,19 @@ watch(() => userStore.userInfo.useNote, () => {
 })
 
 function getNoteWordFn() {
+  loading.value = true
   getNoteWord(userStore.userInfo.useNote).then((res: any) => {
     setPlanSet(res as wordType[])
+    if (!res.length) {
+      return isEmptyWord.value = true
+    }
     const filterRes = res.filter((word: wordType) => word.plan !=='6')
     finish.value = res.filter((word: wordType) => word.plan ==='6')
     filterRes.sort(() => {
       return 0.5 - Math.random()
     })
     wordList.value = filterRes
-  })
+  }).finally(() => loading.value = false)
 }
 
 function plan(word: wordType, action: wordPlanActionType) {
