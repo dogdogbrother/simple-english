@@ -19,5 +19,7 @@ export interface _userInfoType {
   allWord: number,
   masterWord: number,
   username: string,
+  autoPlay: string[],
+  defaultPhonetic: 'uk' | 'us',
 }
 export type userInfoType = Partial<_userInfoType>

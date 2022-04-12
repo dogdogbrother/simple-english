@@ -55,7 +55,7 @@
     :visible="drawerState"
     @close="drawerState = false"
     placement="bottom"
-    height="700"
+    height="500"
   >
     <WordInfo ref="wordInfo" />
   </Drawer>

@@ -9,6 +9,8 @@ export const useUserStore = defineStore('user', {
       id: '',
       introduce: '',  // 个人简介
       useNote: '',  // 正在学习中的单词本id
+      autoPlay: [] as string[],  // 是否自动播放,有两个地方的开关
+      defaultPhonetic: 'us' as 'us' | 'uk',  // 默认音标
     }
   }),
   getters: {

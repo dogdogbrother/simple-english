@@ -21,10 +21,13 @@
 import { wordType } from '@/type/word';
 import { ref } from 'vue'
 import Phonetic from '@/widget/phonetic.vue'
+import { useAutoPlay } from '@/utils/hook';
 
 const wordInfo = ref<wordType>()
 
 function setWordInfo(info: wordType) {
+  // 自动播放音频
+  useAutoPlay('2', info)
   wordInfo.value = info
 }
 

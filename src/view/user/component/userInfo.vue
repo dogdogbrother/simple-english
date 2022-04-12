@@ -12,16 +12,17 @@
     <div v-else class="form-wrap">
       <Form
         hideRequiredMark 
-        :label-col="{span: 4}" 
+        :label-col="{span: 5}" 
         @finish="editUser"
         :model="form"
+        labelAlign="left"
       >
         <Form.Item
           label="用户昵称"
           name="nickname"
           :rules="[{ required: true, message: '请输入昵称' }]"
         >
-          <Input placeholder="昵称" v-model:value="form.nickname"/>
+          <Input placeholder="昵称" v-model:value="form.nickname" />
         </Form.Item>
         <Form.Item
           label="个人简介"
@@ -29,12 +30,26 @@
         >
           <Textarea placeholder="个人简介" v-model:value="form.introduce"></Textarea>
         </Form.Item>
-        <Form.Item :wrapper-col="{offset: 4}">
+        <Form.Item
+          label="自动发音"
+          name="autoPlay"
+          extra="在背单词时或单词本页面查看词意时自动播放发音"
+        >
+          <CheckboxGroup v-model:value="form.autoPlay" :options="autoPlayOptions" />
+        </Form.Item>
+        <Form.Item
+          label="默认音标"
+          name="defaultPhonetic"
+          extra="自动播放发音时默认发音"
+        >
+          <RadioGroup v-model:value="form.defaultPhonetic" :options="phoneticOptions"/>
+        </Form.Item>
+        <Form.Item :wrapper-col="{offset: 5}">
           <Button 
             :loading="loading"
             type="primary" 
             html-type="submit"
-          >修改个人信息</Button>
+          >确定修改</Button>
         </Form.Item>
       </Form>
     </div>
@@ -45,7 +60,7 @@
 <script setup lang="ts">
 import { oneUserInfo } from '@/api/user'
 import { ref, reactive } from 'vue'
-import { Form, Input, Textarea, Button, message } from 'ant-design-vue'
+import { Form, Input, Textarea, Button, message, CheckboxGroup, RadioGroup } from 'ant-design-vue'
 import UserShow from '@/widget/userShow.vue'
 import { userInfoType } from '@/type/user'
 import { updateUserInfo } from '@/api/user'
@@ -63,12 +78,23 @@ const form = reactive<userInfoType>({
   avatar: '',
   nickname: '',
   introduce: '',
+  autoPlay: [],
+  defaultPhonetic: 'us'
 })
 const loading = ref(false)
 
+const phoneticOptions = [
+  { label: '美标', value: 'us' },
+  { label: '英标', value: 'uk' }
+]
+
+const autoPlayOptions = [
+  { label: '背单词卡片时', value: '1' },
+  { label: '单词本查看释义时', value: '2' }
+]
+
 oneUserInfo(props.userId as string).then((res) => {
   setUserInfo(res as userInfoType)
-
 })
 
 function editUser(values: userInfoType) {
@@ -83,10 +109,12 @@ function editUser(values: userInfoType) {
 
 function setUserInfo(data: userInfoType) {
   userInfo.value = data
-  const { username, nickname, avatar, introduce } = data
+  const { username, nickname, avatar, introduce, autoPlay, defaultPhonetic } = data
   form.nickname = nickname || username
   form.avatar = avatar
   form.introduce = introduce
+  form.autoPlay = autoPlay
+  form.defaultPhonetic = defaultPhonetic
 }
 </script>
 

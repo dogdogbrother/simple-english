@@ -68,6 +68,7 @@ import { Button } from 'ant-design-vue';
 import Phonetic from '@/widget/phonetic.vue'
 import { useRouter } from 'vue-router'
 import Loading from '@/components/loading/index.vue'
+import { useAutoPlay } from '@/utils/hook';
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -93,7 +94,12 @@ const showWordMark = ref(false)
 
 // 获取单词内容
 const getWord = computed(() => {
-  return wordList.value[0] || unfamiliarWord.value[0] || 0
+  return wordList.value[0] || unfamiliarWord.value[0] || false
+})
+
+watch(getWord, (value) => {
+  // 写个自定义hook,自动根据默认音标播放即可
+  useAutoPlay('1', value)
 })
 
 if (userStore.userInfo.useNote) {
