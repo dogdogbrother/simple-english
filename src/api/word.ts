@@ -9,11 +9,20 @@ export function addWord(data: any) {
   })
 }
 
+// 删除单词
+export function delWord(wordId: string | number) {
+  return http({
+    url: `/word/${wordId}`,
+    method: 'delete',
+  })
+}
+
 // 获取单词本单词
-export function getNoteWord(noteId: number | string) {
+export function getNoteWord(noteId: number | string, params: any) {
   return http({
     url: `/word/list/${noteId}`,
     method: 'get',
+    params
   })
 }
 
