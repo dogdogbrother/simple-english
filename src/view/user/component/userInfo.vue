@@ -19,7 +19,7 @@
       >
         <Form.Item
           label="用户头像"
-          name="nickname"
+          name="avatar"
         > 
           <div flex-s>
             <Spin :spinning="uploadLoading">
