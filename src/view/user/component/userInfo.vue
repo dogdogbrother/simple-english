@@ -1,10 +1,10 @@
 <template>
   <div class="user-card">
-    <div v-if="!isEdit">
+    <div v-if="!isEdit" class="user-info">
       <UserShow :user="userInfo"/>
       <Button 
         v-if="props.userId == props._userId"
-        class="edit-btn" 
+        m-l-5
         type="primary"
         @click="isEdit = true"
       >编辑资料</Button>
@@ -17,6 +17,20 @@
         :model="form"
         labelAlign="left"
       >
+        <Form.Item
+          label="用户头像"
+          name="nickname"
+        > 
+          <div flex-s>
+            <Spin :spinning="uploadLoading">
+              <Avatar :size="52" :src="form.avatar" />
+            </Spin>
+            <div class="file-wrap" m-l-10>
+              <label for="file-input">更换头像</label>
+              <input id="file-input" type="file" accept="image/*" @change="upload" />
+            </div>
+          </div>
+        </Form.Item>
         <Form.Item
           label="用户昵称"
           name="nickname"
@@ -50,6 +64,7 @@
             type="primary" 
             html-type="submit"
           >确定修改</Button>
+          <Button m-l-10 @click="isEdit = false">取消修改</Button>
         </Form.Item>
       </Form>
     </div>
@@ -60,11 +75,22 @@
 <script setup lang="ts">
 import { oneUserInfo } from '@/api/user'
 import { ref, reactive } from 'vue'
-import { Form, Input, Textarea, Button, message, CheckboxGroup, RadioGroup } from 'ant-design-vue'
+import { 
+  Form, 
+  Input, 
+  Textarea, 
+  Button, 
+  message, 
+  CheckboxGroup, 
+  RadioGroup,
+  Avatar,
+  Spin
+} from 'ant-design-vue'
 import UserShow from '@/widget/userShow.vue'
 import { userInfoType } from '@/type/user'
 import { updateUserInfo } from '@/api/user'
 import { useUserStore } from '@/store'
+import { uploadImg } from '@/api/upload'
 
 const props = defineProps({
   userId: String,
@@ -82,6 +108,7 @@ const form = reactive<userInfoType>({
   defaultPhonetic: 'us'
 })
 const loading = ref(false)
+const uploadLoading = ref(false)
 
 const phoneticOptions = [
   { label: '美标', value: 'us' },
@@ -116,6 +143,17 @@ function setUserInfo(data: userInfoType) {
   form.autoPlay = autoPlay
   form.defaultPhonetic = defaultPhonetic
 }
+
+function upload(e: Event) {
+  const target = e.target as HTMLInputElement
+  const file = (target.files as FileList)[0]
+  const formData = new FormData()
+  formData.append('file', file)
+  uploadLoading.value = true
+  uploadImg(formData).then((res: any) => {
+    form.avatar = res
+  }).finally(() => uploadLoading.value = false)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -126,16 +164,29 @@ function setUserInfo(data: userInfoType) {
   position: relative;
   margin-bottom: 10px;
 }
-
-.edit-btn {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .form-wrap {
   width: 70%;
   min-width: 300px;
   max-width: 400px;
   margin: 0 auto;
+}
+.file-wrap {
+  position: relative;
+  input {
+    width: 0px;
+    height: 0px;
+  }
+  label {
+    color: #285CBE;
+    cursor: pointer;
+    &:hover {
+      color: #4b7dcc;
+    }
+  }
 }
 </style>

@@ -3,8 +3,6 @@
   <div class="oprate-btns">
     <div>
       <Button type="primary" @click="changeGraspStatus">{{isShowGrasp ? '隐藏' : '显示'}}已掌握</Button>
-      <span m-l-20 m-r-10>已掌握{{getGraspNum}}个单词</span>
-      <span>{{getNoGraspNum}}个单词学习中</span>
     </div>
     <Popconfirm 
       v-if="useStore.userInfo.useNote "
@@ -25,6 +23,11 @@
       @click="selecNote"
       :loading="useLoading"
     >{{useLoading ? "正在切换中" : "切换到此单词本"}}</Button>
+    <div m-l-10  v-if="useStore.userInfo.useNote == noteId" >
+      <span m-r-10>已掌握{{getGraspNum}}个单词</span>
+      <span m-r-10>{{getNoGraspNum}}个单词学习中</span>
+      <span>{{getNotStarted}}单词未学习</span>
+    </div>
   </div>
   <ul class="word-box">
     <li v-for="word in conditionWordList" :key="word.id">
@@ -39,6 +42,15 @@
         @confirm="setPlan(word)">
         <Button type="link">设为{{word.plan === '6' ? '陌生' : '掌握'}}</Button>
       </Popconfirm>
+      <Popconfirm 
+        placement="bottom" 
+        ok-text="确定" 
+        cancel-text="不了" 
+        :title='`要把这个单词设置为${word.plan === "6" ? "陌生" : "掌握"}吗?`'
+        @confirm="setPlan(word)">
+        <Button type="link">删除</Button>
+      </Popconfirm>
+      <Button type="link">编辑</Button>
     </li>
   </ul>
   <Drawer
@@ -128,7 +140,12 @@ const conditionWordList = computed(() => {
 
 // 获取没掌握的单词数量
 const getNoGraspNum = computed(() => {
-  return wordList.value.filter(word => word.plan !== '6').length
+  return wordList.value.filter(({plan}) => plan && plan !== '6').length
+})
+
+// 获取还没开始学的单词
+const getNotStarted = computed(() => {
+  return wordList.value.filter(word => !word.plan).length
 })
 
 // 获取已掌握的单词数量
@@ -157,6 +174,8 @@ function setPlan(word: wordType) {
 
 <style lang="scss" scoped>
 .oprate-btns {
+  display: flex;
+  align-items: center;
   margin-right: -20px;
   > * {
     margin-right: 20px;

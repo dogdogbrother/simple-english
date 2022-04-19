@@ -1,7 +1,7 @@
 import http from './config'
 
 // 上传图片
-export function uploadImg(form: any, onUploadProgress: any) {
+export function uploadImg(form: FormData, onUploadProgress?: any) {
   return http({
     url: '/upload/illustration',
     method: 'post',
