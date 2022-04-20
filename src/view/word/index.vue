@@ -6,7 +6,7 @@
     <span>{{ studyProgress.notStarted }}单词未学习</span>
   </div>
   <!-- 如果单词有内容,而且不是我在用的单词本,就可以切换 -->
-  <div v-else-if="wordList.length && useStore.userInfo.useNote != noteId">
+  <div v-else-if="studyProgress.all && useStore.userInfo.useNote != noteId">
     <Popconfirm
       v-if="useStore.userInfo.useNote"
       placement="bottom"
@@ -181,6 +181,7 @@ const drawerState = ref(false); // 抽屉的开关
 // pc端和移动端抽屉配置稍有不同
 const _isPc = ref(isPc);
 const studyProgress = ref({
+  all: 0,
   grasp: 0,
   notStarted: 0,
   studying: 0,

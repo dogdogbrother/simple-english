@@ -39,22 +39,28 @@
         </div>
       </div>
       <div class="plan-set">
-        <li>全部单词: {{planSet.all}}</li>
-        <li>已掌握: {{planSet.grasp}}</li>
-        <li>学习中: {{planSet.studying}}</li>
-        <li>未学习: {{planSet.notLearn}}</li>
+        <li>全部单词: {{studyProgress.all}}</li>
+        <li>已掌握: {{studyProgress.grasp}}</li>
+        <li>学习中: {{studyProgress.studying}}</li>
+        <li>未学习: {{studyProgress.notStarted}}</li>
       </div>
     </div>
     <div v-else-if="userStore.userInfo.id && !userStore.userInfo.useNote">
       <span style="font-size: 16px;">还没有在学习中的单词本哦,去选一个吧</span>
       <Button type="primary" m-l-20 @click="toHome">去首页转转</Button>
     </div>
-    <div v-else-if="isEmptyWord">
+    <div v-else-if="studyProgress.all === 0">
       <span>单词本还是空的哦</span>
     </div>
-    <div v-else-if="planSet.all === planSet.grasp && isEmptyWord">
-      <span>牛哇,单词本的 {{planSet.all}} 个单词都学完啦~</span>
-      <Button type="primary" m-l-20 @click="repetition">再学一遍</Button>
+    <div v-else-if="unfamiliarWord.length === 0 && wordList.length === 0">
+      <span>牛哇,单词本的 {{studyProgress.all}} 个单词都学完啦~</span>
+      <Button 
+        v-if="studyProgress.all === studyProgress.grasp" 
+        type="primary"
+        m-l-20 
+        @click="toHome"
+      >挑战下别的单词本?</Button>
+      <Button v-else type="primary" m-l-20 @click="repetition">再学一遍</Button>
     </div>
   </div>
 </template>
@@ -73,7 +79,6 @@ import { useAutoPlay } from '@/utils/hook';
 const router = useRouter()
 const userStore = useUserStore()
 const loading = ref(false)
-const isEmptyWord = ref(false) // 比较粗糙的做法
 
 // 是全部单词, 先背这个数组里面的
 const wordList = ref<wordType[]>([])
@@ -82,16 +87,15 @@ const unfamiliarWord = ref<wordType[]>([])
 // 背过的单词.也就是点了认识的,因为后续要增加拼写的功能
 const finish = ref<wordType[]>([])
 // 学习进度
-const planSet = ref({
+const studyProgress = ref({
   all: 0,  // 全部的单词
   grasp: 0, // 掌握的单词,也就是plan=6
   studying: 0, // 学习中的,plan有值但<6
-  notLearn: 0, // plan是null就是这个单词没学习过
+  notStarted: 0, // plan是null就是这个单词没学习过
 })
 
 const showExplain = ref(false)
 const showWordMark = ref(false)
-
 // 获取单词内容
 const getWord = computed(() => {
   return wordList.value[0] || unfamiliarWord.value[0] || false
@@ -111,17 +115,13 @@ watch(() => userStore.userInfo.useNote, () => {
 
 function getNoteWordFn() {
   loading.value = true
-  getNoteWord(userStore.userInfo.useNote).then((res: any) => {
-    setPlanSet(res as wordType[])
-    if (!res.length) {
-      return isEmptyWord.value = true
-    }
-    const filterRes = res.filter((word: wordType) => word.plan !=='6')
-    finish.value = res.filter((word: wordType) => word.plan ==='6')
-    filterRes.sort(() => {
+  getNoteWord(userStore.userInfo.useNote, { planType: '4'}).then((res: any) => {
+    const { words, ..._studyProgress } = res
+    studyProgress.value = _studyProgress
+    words.sort(() => {
       return 0.5 - Math.random()
     })
-    wordList.value = filterRes
+    wordList.value = words as wordType[]
   }).finally(() => loading.value = false)
 }
 
@@ -157,25 +157,6 @@ function repetition() {
   unfamiliarWord.value = [...finish.value]
 }
 
-function setPlanSet(data: wordType[]) {
-  const all = data.length
-  let grasp = 0
-  let studying = 0
-  let notLearn = 0
-  data.forEach(word => {
-    if (word.plan === "6") {
-      grasp++
-    } else if (word.plan) {
-      studying++
-    } else notLearn++
-  })
-  planSet.value = {
-    all,
-    grasp,
-    studying,
-    notLearn
-  }
-}
 </script>
 
 <style lang="scss" scoped>

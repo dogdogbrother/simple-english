@@ -18,11 +18,11 @@ export function delWord(wordId: string | number) {
 }
 
 // 获取单词本单词
-export function getNoteWord(noteId: number | string, params?: any) {
+export function getNoteWord(noteId: number | string, params: any) {
   return http({
     url: `/word/list/${noteId}`,
     method: 'get',
-    params: params || {}
+    params: params
   })
 }
 
