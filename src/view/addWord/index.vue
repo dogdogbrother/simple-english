@@ -14,7 +14,12 @@
         :help="getHelp(checkWordStatus)"
         :rules="[{ required: true, message: '请输入单词' }]"
       >
-        <Input @input="initCheckStatus" v-model:value="form.word" @blur="checkWordAndGetInfo"/>
+        <Input 
+          @input="initCheckStatus" 
+          v-model:value="form.word" 
+          @blur="checkWordAndGetInfo"
+          :readonly="!!wordId"
+        />
       </Form.Item>
       <Form.Item label="有道翻译" v-if="youdaoExplain.word">
         <div class="youdao-card">
@@ -43,6 +48,7 @@
           <span :wrapper-col="{offset: 5}"></span>
           <div flex-1>
             <Upload
+              :fileList="fileList"
               accept="image/*"
               :customRequest="customUpload"
               @change="upload"
@@ -63,7 +69,7 @@
           :loading="loading || uploadLoading"
           type="primary" 
           html-type="submit"
-        >创建</Button>
+        >{{wordId ? '编辑' : '创建'}}</Button>
       </Form.Item>
     </Form>
   </div>
@@ -73,7 +79,7 @@
 import { Form, Input, Button, Textarea, message, Upload, Row } from 'ant-design-vue'
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { addWord, checkNoteWord, getYoudao } from '@/api/word'
+import { addWord, checkNoteWord, getYoudao, wordInfo, updateWord } from '@/api/word'
 import { uploadImg } from '@/api/upload'
 import Phonetic from '@/widget/phonetic.vue'
 import { youdaoType } from '@/type/word'
@@ -83,7 +89,9 @@ const uploadLoading = ref(false)
 const router = useRouter()
 const checkWordStatus = ref<0 | 1 | 2 | 3>(0)  // 0 是未校验, 1 是loading, 2 是成功, 3 是失败
 
-const { noteId } = useRoute().params
+const route = useRoute()
+const { noteId } = route.params
+const { wordId } = route.query
 type StatusType = '' | 'validating' | 'success' | 'error'
 const statusMap: {[key: number]: StatusType } = {
   0: '',
@@ -98,17 +106,47 @@ const form = reactive({
 const fileList = ref<any>([])
 const youdaoExplain = ref<youdaoType>({})
 
+// 如果有单词id 就代表是编辑
+if (wordId) {
+  wordInfo(wordId).then((res: any) => {
+    const { youdao, word, wordMark, fileList: _fileList } = res
+    youdaoExplain.value = youdao
+    form.word = word
+    form.wordMark = wordMark
+    if (!_fileList) return
+    fileList.value = _fileList.split(',').map((file: any, index: number) => {
+      return {
+        status: 'done',
+        url: file
+      }
+    })
+  })
+}
 function onAddWord() {
-  if (checkWordStatus.value !== 2) return
   const _fileList = fileList.value
     .filter((file :any) => file.status === 'done')
     .map((file :any) => file.response)
+  // wordId 存在就是编辑
+  if (wordId) {
+    return updateWord(wordId, {
+      fileList: _fileList,
+      wordMark: form.wordMark
+    }).then(() => {
+      message.success('编辑成功')
+      router.back()
+    }).catch(err => {
+      message.error(err.msg)
+    })
+  }
+
+  if (checkWordStatus.value !== 2) return
   addWord({
     ...form,
     noteId,
     fileList: _fileList,
     keyWord: youdaoExplain.value.word
   }).then(() => {
+    message.success('添加成功')
     router.back()
   }).catch(err => {
     message.error(err.msg)
@@ -121,6 +159,7 @@ function initCheckStatus() {
 }
 // 检查此单词是否在此单词本中存在, 并且获取该单词的道翻译
 function checkWordAndGetInfo() {
+  if (wordId) return  // 编辑的话不去检查单词状态
   if(!form.word) return
   checkWordStatus.value = 1
   Promise.all([checkWord(), youdao()]).then(() => {

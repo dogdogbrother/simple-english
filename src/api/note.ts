@@ -9,6 +9,14 @@ export function getNoteList(params?: any) {
   })
 }
 
+// 获取单词本详情
+export function getNoteInfo(noteId: any) {
+  return http({
+    url: `/note/info/${noteId}`,
+    method: 'get',
+  })
+}
+
 // 增加单词本
 export function addNote(data: any) {
   return http({

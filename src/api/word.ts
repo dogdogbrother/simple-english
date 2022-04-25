@@ -9,6 +9,23 @@ export function addWord(data: any) {
   })
 }
 
+// 单词详情
+export function wordInfo(wordId: any) {
+  return http({
+    url: `/word/info/${wordId}`,
+    method: 'get',
+  })
+}
+
+// 更新单词的笔记
+export function updateWord(wordId: any, data: any) {
+  return http({
+    url: `/word/info/${wordId}`,
+    method: 'put',
+    data
+  })
+}
+
 // 删除单词
 export function delWord(wordId: string | number) {
   return http({

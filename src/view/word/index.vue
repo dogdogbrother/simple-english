@@ -1,5 +1,6 @@
 <template>
   <UseUser ref="useUserRef" />
+  <p m-b-20>笔记本简介: {{noteSummary}}</p>
   <div m-b-20 v-if="useStore.userInfo.useNote == noteId">
     <span m-r-10>已掌握{{ studyProgress.grasp }}个单词</span>
     <span m-r-10>{{ studyProgress.studying }}个单词学习中</span>
@@ -80,7 +81,7 @@
         >
           <Button type="link" block>掌握</Button>
         </Popconfirm>
-        <Button type="link" block @click="onEditWord">编辑</Button>
+        <Button type="link" block @click="onEditWord(record)">编辑</Button>
         <Popconfirm 
           ok-text="确定" 
           cancel-text="不了" 
@@ -92,30 +93,6 @@
       </template>
     </template>
   </Table>
-  <div class="oprate-btns">
-    <Popconfirm
-      v-if="useStore.userInfo.useNote"
-      placement="bottom"
-      ok-text="确定"
-      cancel-text="不了"
-      title="你已经有了正在学习中的单词本了,确定要切换吗"
-      @confirm="selecNote"
-    >
-      <Button
-        v-if="useStore.userInfo.useNote != noteId"
-        type="primary"
-        :loading="useLoading"
-        >{{ useLoading ? "正在切换中" : "切换到此单词本" }}</Button
-      >
-    </Popconfirm>
-    <Button
-      v-else-if="useStore.userInfo.useNote != noteId"
-      type="primary"
-      @click="selecNote"
-      :loading="useLoading"
-      >{{ useLoading ? "正在切换中" : "切换到此单词本" }}</Button
-    >
-  </div>
   <Drawer
     v-if="_isPc"
     :visible="drawerState"
@@ -138,8 +115,8 @@
 
 <script setup lang="ts">
 import { getNoteWord, setWordPlan, delWord } from "@/api/word";
-import { useNote } from "@/api/note";
-import { useRoute } from "vue-router";
+import { useNote, getNoteInfo } from "@/api/note";
+import { useRoute, useRouter } from "vue-router";
 import {
   Form,
   Input,
@@ -160,7 +137,7 @@ import { isPc } from "@/utils";
 
 const { Item } = Form;
 const { Option } = Select;
-
+const router = useRouter()
 interface formType {
   word: string;
   planType: "" | "1" | "2" | "3"; // 全部 未学习 学习中 已掌握
@@ -178,6 +155,7 @@ const useStore = useUserStore();
 const useLoading = ref(false);
 const searchLoading = ref(false);
 const drawerState = ref(false); // 抽屉的开关
+const noteSummary = ref('')  // 笔记本简介
 // pc端和移动端抽屉配置稍有不同
 const _isPc = ref(isPc);
 const studyProgress = ref({
@@ -275,9 +253,17 @@ function onDelWord(wordId: number) {
     });
   });
 }
-function onEditWord() {
-  alert('过几天工作不忙了,我再补上编辑功能')
+function onEditWord(word: wordType) {
+  const { noteId, id: wordId } = word
+  router.push({
+    path: `/addWord/${noteId}`,
+    query: { wordId }
+  })
 }
+
+getNoteInfo(noteId).then((res: any) => {
+  noteSummary.value = res.noteSummary
+})
 </script>
 
 <style lang="scss" scoped>

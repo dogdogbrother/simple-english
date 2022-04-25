@@ -3,6 +3,7 @@ export type planType = "1" | "2" | "3" | "4" | "5" | "6"
 export interface wordType {
   createdAt: string,
   id: number | string,
+  noteId: number | string,
   fileList: string,
   keyWord: string,
   word: string,
