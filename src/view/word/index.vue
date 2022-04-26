@@ -85,7 +85,7 @@ import {
   Popconfirm,
   Drawer,
 } from "ant-design-vue";
-import Table from './component/Table.vue'
+import Table from './component/MyTable.vue'
 import { ref, nextTick, reactive } from "vue";
 import { useUserStore } from "@/store";
 import { wordType } from "@/type/word";
