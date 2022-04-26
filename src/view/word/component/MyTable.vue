@@ -18,31 +18,35 @@
         {{ planMap[text] || "未学习" }}
       </template>
       <template v-if="column.dataIndex === 'operate'">
-        <Popconfirm
-          ok-text="确定"
-          cancel-text="不了"
-          title="是否对此单词设置为陌生"
-          @confirm="setPlan(record, 0)"
-        >
-          <Button type="link" block>陌生</Button>
-        </Popconfirm>
-        <Popconfirm
-          ok-text="确定"
-          cancel-text="不了"
-          title="是否对此单词设置为掌握"
-          @confirm="setPlan(record, 1)"
-        >
-          <Button type="link" block>掌握</Button>
-        </Popconfirm>
-        <Button type="link" block @click="onEditWord(record)">编辑</Button>
-        <Popconfirm 
-          ok-text="确定" 
-          cancel-text="不了" 
-          title="是否删除此单词"
-          @confirm="onDelWord(record.id)"
-        >
-          <Button type="link" block>删除</Button>
-        </Popconfirm>
+        <div>
+          <Popconfirm
+            ok-text="确定"
+            cancel-text="不了"
+            title="是否对此单词设置为陌生"
+            @confirm="setPlan(record, 0)"
+          >
+            <Button type="link">陌生</Button>
+          </Popconfirm>
+          <Popconfirm
+            ok-text="确定"
+            cancel-text="不了"
+            title="是否对此单词设置为掌握"
+            @confirm="setPlan(record, 1)"
+          >
+            <Button type="link">掌握</Button>
+          </Popconfirm>
+        </div>
+        <div>
+          <Button type="link" @click="onEditWord(record)">编辑</Button>
+          <Popconfirm 
+            ok-text="确定" 
+            cancel-text="不了" 
+            title="是否删除此单词"
+            @confirm="onDelWord(record.id)"
+          >
+            <Button type="link">删除</Button>
+          </Popconfirm>
+        </div>
       </template>
     </template>
   </Table>
@@ -76,14 +80,17 @@ const columns: any = [
   {
     title: "学习进度",
     dataIndex: "plan",
-    width: "100px",
+    width: "25%",
+    minWidth: "100px",
+    maxWidth: "160px",
   },
   {
     title: "操作",
     dataIndex: "operate",
-    width: "15%",
-    minWidth: "40px",
-    maxWidth: "100px",
+    width: "20%",
+    minWidth: "70px",
+    maxWidth: "110px",
+    
   },
 ]
 
@@ -133,3 +140,18 @@ const planMap: { [key: string]: string } = {
   "6": "掌握",
 }
 </script>
+
+<style lang="scss" scoped>
+.table {
+  max-width: 1000px;
+}
+.word {
+  font-weight: bold;
+  color: #285cbe;
+  cursor: pointer;
+  text-decoration: underline;
+  &:hover {
+    color: #4b7dcc;
+  }
+}
+</style>

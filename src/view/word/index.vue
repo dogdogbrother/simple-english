@@ -167,13 +167,4 @@ getNoteInfo(noteId).then((res: any) => {
   max-width: 900px;
   margin-bottom: 20px;
 }
-.word {
-  font-weight: bold;
-  color: #285cbe;
-  cursor: pointer;
-  text-decoration: underline;
-  &:hover {
-    color: #4b7dcc;
-  }
-}
 </style>
